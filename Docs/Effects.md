@@ -3,8 +3,8 @@
 ## Visual Effects
 
 - Bloom
-- Lens flare
 - Contrails plane / missiles (see *wingtip vortices*)
+- Gun muzzle flash
 - Water drops while flying through clouds
 - Smoke / fire indicating damage
 - Heat displacement effect
