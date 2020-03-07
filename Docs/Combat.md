@@ -4,15 +4,11 @@ Mapping:
   - A button: fire guns
   - B button: fire missiles
   - Y button: select target
-  - Y button (hold): look at target
-  - Right stick: look around
 
 ## Targeting
 
 Only one target can be selected at any given time.
 Missiles always lock on the currently selected target, given it is in range.
-
-When looking around or looking at the target, the camera orbits the player's plane.
 
 ## Guns
 
