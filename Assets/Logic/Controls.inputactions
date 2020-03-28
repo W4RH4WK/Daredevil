@@ -1,0 +1,128 @@
+{
+    "name": "Controls",
+    "maps": [
+        {
+            "name": "Flight",
+            "id": "d9df74b1-1da2-4d3a-a20d-c6900a387c80",
+            "actions": [
+                {
+                    "name": "Pitch",
+                    "type": "Value",
+                    "id": "7bb373f2-205d-49d7-a101-ecf59ba27310",
+                    "expectedControlType": "Axis",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "Roll",
+                    "type": "Value",
+                    "id": "96b88db8-fc8a-4b42-930e-4bb163fd3484",
+                    "expectedControlType": "Axis",
+                    "processors": "Invert",
+                    "interactions": ""
+                },
+                {
+                    "name": "YawLeft",
+                    "type": "Button",
+                    "id": "24c03cd7-6f3e-4775-8ab3-f1d5954dc442",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "YawRight",
+                    "type": "Button",
+                    "id": "ca23a5fe-74b4-4db8-b7b7-e5ab2a377fa2",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "Accelerate",
+                    "type": "Value",
+                    "id": "2673e1af-18e5-4dd6-9218-1ca8fb03522d",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "Decelerate",
+                    "type": "Value",
+                    "id": "2dbd1d97-e728-4f7c-be16-dbb67a234d6a",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": ""
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "48e7586d-b83c-4fa8-9b0f-ca4b95d88497",
+                    "path": "<Gamepad>/leftStick/y",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Pitch",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "edcae297-3bab-46c6-86ba-fa1c70641645",
+                    "path": "<Gamepad>/leftStick/x",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Roll",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "118eab3b-4bcc-4053-bd26-2e698248691e",
+                    "path": "<Gamepad>/leftShoulder",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "YawLeft",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "2477ccc5-55d6-409f-bc36-68e2fac1378f",
+                    "path": "<Gamepad>/rightShoulder",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "YawRight",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "ce869451-3f8b-47d8-b092-6038691a334c",
+                    "path": "<Gamepad>/rightTrigger",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Accelerate",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "71885a06-9b61-4f5d-8723-0eea8ff77822",
+                    "path": "<Gamepad>/leftTrigger",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Decelerate",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        }
+    ],
+    "controlSchemes": []
+}

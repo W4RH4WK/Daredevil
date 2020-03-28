@@ -1,0 +1,7 @@
+*.asset  merge=unityyamlmerge
+*.mat    merge=unityyamlmerge
+*.meta   merge=unityyamlmerge
+*.prefab merge=unityyamlmerge
+*.unity  merge=unityyamlmerge
+
+NavMesh-*.asset    binary 
