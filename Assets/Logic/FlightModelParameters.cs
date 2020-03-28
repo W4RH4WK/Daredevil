@@ -15,7 +15,7 @@ public class FlightModelParameters : MonoBehaviour
 
     public float StrafeResponseRate = 0.35f;
 
-    public float StrafeRotationalResponseRateFactor = 1.8f;
+    public float StrafeRotationalResponseRateModifier = 1.8f;
 
     public float HighGTurnPitchRateModifier = 2.0f;
 

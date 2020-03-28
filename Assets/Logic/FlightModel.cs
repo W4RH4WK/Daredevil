@@ -129,7 +129,7 @@ public class FlightModel : MonoBehaviour
         }
         else if (StrafeMode)
         {
-            rates *= FlightModelParams.StrafeRotationalResponseRateFactor;
+            rates *= FlightModelParams.StrafeRotationalResponseRateModifier;
         }
         else if (HighGTurnMode)
         {
