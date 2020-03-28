@@ -73,10 +73,10 @@ public class FlightModel : MonoBehaviour
         if (Stalling)
         {
             var newRotation = Quaternion.LookRotation(Vector3.down, transform.up);
-            transform.localRotation = Quaternion.Lerp(transform.localRotation, newRotation, FlightModelParams.StallingRotationRate * Time.deltaTime);
+            transform.rotation = Quaternion.Lerp(transform.rotation, newRotation, FlightModelParams.StallingRotationRate * Time.deltaTime);
 
             Velocity += FlightModelParams.StallingGravity * Vector3.down * Time.deltaTime;
-            transform.localPosition += Velocity * Time.deltaTime;
+            transform.position += Velocity * Time.deltaTime;
 
             StallingDurationLeft -= Time.deltaTime;
         }
@@ -141,7 +141,11 @@ public class FlightModel : MonoBehaviour
         var newDeltaRotation = mobility * Vector3.Scale(rates, new Vector3(pitchInput, yawInput, rollInput));
         DeltaRotation = Vector3.Lerp(DeltaRotation, newDeltaRotation, FlightModelParams.RotationalResponseRate * Time.deltaTime);
 
-        transform.localRotation *= Quaternion.Euler(DeltaRotation * Time.deltaTime);
+        transform.Rotate(DeltaRotation * Time.deltaTime);
+
+        // Simulate rotation induced by lift when banking.
+        var lateralDrift = FlightModelParams.BankingDriftRate * Mathf.Sin(-transform.eulerAngles.z * Mathf.Deg2Rad) * Time.deltaTime;
+        transform.Rotate(0.0f, lateralDrift, 0.0f, Space.World);
     }
 
     void UpdateVelocity()
@@ -155,18 +159,22 @@ public class FlightModel : MonoBehaviour
         var newThrust = FlightModelParams.BaseThrust + acceleration - deceleration;
         Thrust = Mathf.Lerp(Thrust, newThrust, FlightModelParams.ThrustResponseRate * Time.deltaTime);
 
-        // This component simulates gravity according to the planes rotation.
+        // Simulate speed up / slow down induced by gravity when pitching.
         var gravitationalThrust = FlightModelParams.FlightGravity * Mathf.Sin(transform.eulerAngles.x * Mathf.Deg2Rad);
+
+        // Simulate loss of lift when rolling.
+        var liftLoss = FlightModelParams.BankingLiftLoss * Mathf.Sin(0.5f * transform.eulerAngles.z * Mathf.Deg2Rad);
+        liftLoss *= FlightModelParams.BankingLiftLossSpeedImpact * (1.0f - Speed / FlightModelParams.MaxSpeed);
 
         var responseRate = FlightModelParams.BaseResponseRate;
 
         if (StrafeMode)
             responseRate = FlightModelParams.StrafeResponseRate;
 
-        var newVelocity = (Thrust + gravitationalThrust) * transform.forward;
+        var newVelocity = (Thrust + gravitationalThrust) * transform.forward + liftLoss * Vector3.down;
         Velocity = Vector3.Lerp(Velocity, newVelocity, responseRate * Time.deltaTime);
         Velocity = Vector3.ClampMagnitude(Velocity, FlightModelParams.MaxSpeed);
 
-        transform.localPosition += Velocity * Time.deltaTime;
+        transform.position += Velocity * Time.deltaTime;
     }
 }

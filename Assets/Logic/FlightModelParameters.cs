@@ -45,7 +45,7 @@ public class FlightModelParameters : MonoBehaviour
 
     public float YawRate = 12.0f;
 
-    public float FocusModeRotationRate = 15.0f;
+    public float FocusModeRotationRate = 35.0f;
 
     //////////////////////////////////////////////////////////////////////////
 
@@ -58,4 +58,10 @@ public class FlightModelParameters : MonoBehaviour
     public float Deceleration = 15.0f;
 
     public float FlightGravity = 10.0f;
+
+    public float BankingDriftRate = 10.0f;
+
+    public float BankingLiftLoss = 8.0f;
+
+    public float BankingLiftLossSpeedImpact = 1.0f;
 }

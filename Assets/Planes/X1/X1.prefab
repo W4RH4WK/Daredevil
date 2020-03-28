@@ -388,7 +388,7 @@ MonoBehaviour:
   ThrustResponseRate: 0.45
   Mobility: 2.8
   StrafeResponseRate: 0.35
-  StrafeRotationalResponseRateFactor: 1.8
+  StrafeRotationalResponseRateModifier: 1.8
   HighGTurnPitchRateModifier: 2
   HighGTurnDecelerationModifier: 1.5
   StallingAttackSpeed: 20
@@ -396,16 +396,20 @@ MonoBehaviour:
   StallingMinimumDuration: 1.5
   StallingRotationRate: 0.7
   StallingGravity: 15
+  StallingThrustCutFactor: 0.5
   PitchUpRate: 65
   PitchDownRate: 45
   RollRate: 120
   YawRate: 12
-  FocusModeRotationRate: 15
+  FocusModeRotationRate: 35
   BaseThrust: 32
   MaxSpeed: 80
   Acceleration: 45
   Deceleration: 15
   FlightGravity: 10
+  BankingDriftRate: 10
+  BankingLiftLoss: 8
+  BankingLiftLossSpeedImpact: 1
 --- !u!1 &3925877854337154828
 GameObject:
   m_ObjectHideFlags: 0
