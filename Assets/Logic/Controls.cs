@@ -1,4 +1,4 @@
-// GENERATED AUTOMATICALLY FROM 'Assets/Generic/Controls.inputactions'
+// GENERATED AUTOMATICALLY FROM 'Assets/Logic/Controls.inputactions'
 
 using System;
 using System.Collections;
@@ -63,6 +63,14 @@ public class @Controls : IInputActionCollection, IDisposable
                     ""type"": ""Value"",
                     ""id"": ""2dbd1d97-e728-4f7c-be16-dbb67a234d6a"",
                     ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""Look"",
+                    ""type"": ""Value"",
+                    ""id"": ""1e71c882-38f5-4c2a-aa00-0c53d2e69de7"",
+                    ""expectedControlType"": ""Vector2"",
                     ""processors"": """",
                     ""interactions"": """"
                 }
@@ -133,6 +141,17 @@ public class @Controls : IInputActionCollection, IDisposable
                     ""action"": ""Decelerate"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""e57051e0-5e4c-4777-93c0-dd789dc90ae4"",
+                    ""path"": ""<Gamepad>/rightStick"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Look"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -147,6 +166,7 @@ public class @Controls : IInputActionCollection, IDisposable
         m_Flight_YawRight = m_Flight.FindAction("YawRight", throwIfNotFound: true);
         m_Flight_Accelerate = m_Flight.FindAction("Accelerate", throwIfNotFound: true);
         m_Flight_Decelerate = m_Flight.FindAction("Decelerate", throwIfNotFound: true);
+        m_Flight_Look = m_Flight.FindAction("Look", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -202,6 +222,7 @@ public class @Controls : IInputActionCollection, IDisposable
     private readonly InputAction m_Flight_YawRight;
     private readonly InputAction m_Flight_Accelerate;
     private readonly InputAction m_Flight_Decelerate;
+    private readonly InputAction m_Flight_Look;
     public struct FlightActions
     {
         private @Controls m_Wrapper;
@@ -212,6 +233,7 @@ public class @Controls : IInputActionCollection, IDisposable
         public InputAction @YawRight => m_Wrapper.m_Flight_YawRight;
         public InputAction @Accelerate => m_Wrapper.m_Flight_Accelerate;
         public InputAction @Decelerate => m_Wrapper.m_Flight_Decelerate;
+        public InputAction @Look => m_Wrapper.m_Flight_Look;
         public InputActionMap Get() { return m_Wrapper.m_Flight; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -239,6 +261,9 @@ public class @Controls : IInputActionCollection, IDisposable
                 @Decelerate.started -= m_Wrapper.m_FlightActionsCallbackInterface.OnDecelerate;
                 @Decelerate.performed -= m_Wrapper.m_FlightActionsCallbackInterface.OnDecelerate;
                 @Decelerate.canceled -= m_Wrapper.m_FlightActionsCallbackInterface.OnDecelerate;
+                @Look.started -= m_Wrapper.m_FlightActionsCallbackInterface.OnLook;
+                @Look.performed -= m_Wrapper.m_FlightActionsCallbackInterface.OnLook;
+                @Look.canceled -= m_Wrapper.m_FlightActionsCallbackInterface.OnLook;
             }
             m_Wrapper.m_FlightActionsCallbackInterface = instance;
             if (instance != null)
@@ -261,6 +286,9 @@ public class @Controls : IInputActionCollection, IDisposable
                 @Decelerate.started += instance.OnDecelerate;
                 @Decelerate.performed += instance.OnDecelerate;
                 @Decelerate.canceled += instance.OnDecelerate;
+                @Look.started += instance.OnLook;
+                @Look.performed += instance.OnLook;
+                @Look.canceled += instance.OnLook;
             }
         }
     }
@@ -273,5 +301,6 @@ public class @Controls : IInputActionCollection, IDisposable
         void OnYawRight(InputAction.CallbackContext context);
         void OnAccelerate(InputAction.CallbackContext context);
         void OnDecelerate(InputAction.CallbackContext context);
+        void OnLook(InputAction.CallbackContext context);
     }
 }

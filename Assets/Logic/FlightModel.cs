@@ -3,12 +3,12 @@ using UnityEngine.Assertions;
 
 public class FlightModel : MonoBehaviour
 {
-    Controls Controls;
+    public Controls Controls { get; private set; }
 
-    FlightModelParameters FlightModelParams;
+    public FlightModelParameters FlightModelParams { get; private set; }
 
     // Change in rotation expressed in Euler angles.
-    Vector3 DeltaRotation;
+    public Vector3 DeltaRotation { get; private set; }
 
     Vector3 Velocity;
 
