@@ -1,0 +1,24 @@
+fileFormatVersion: 2
+guid: 13bf123ba77952340802b6949d83db1e
+TrueTypeFontImporter:
+  externalObjects: {}
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontName: CPMono_v07
+  fontNames:
+  - CPMono_v07
+  fallbackFontReferences:
+  - {fileID: 12800000, guid: c0ba1c2681acf7541ab2612e2b269140, type: 3}
+  - {fileID: 12800000, guid: 42f79d6d5689d4f4c8517790f57a6904, type: 3}
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  useLegacyBoundsCalculation: 0
+  shouldRoundAdvanceValue: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

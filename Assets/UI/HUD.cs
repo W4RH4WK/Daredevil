@@ -23,10 +23,10 @@ public class HUD : MonoBehaviour
     void Update()
     {
         if (Speed)
-            Speed.text = $"{FlightModel.Speed * 10.0f:0}";
+            Speed.text = $"{FlightModel.Speed * 10.0f,4:000}|";
 
         if (Altitude)
-            Altitude.text = $"{FlightModel.Altitude:0}";
+            Altitude.text = $"|{FlightModel.Altitude,4:0000}";
 
         if (Stalling)
             Stalling.enabled = FlightModel.Stalling;
