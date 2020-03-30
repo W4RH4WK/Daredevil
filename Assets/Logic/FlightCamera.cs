@@ -27,8 +27,7 @@ public class FlightCamera : MonoBehaviour
 
     Camera Camera;
 
-    Vector3 TargetPosition;
-    Quaternion TargetRotation;
+    Quaternion FlightRotation;
 
     void Awake()
     {
@@ -39,32 +38,28 @@ public class FlightCamera : MonoBehaviour
 
         BaseFov = Camera.fieldOfView;
 
-        TargetPosition = FlightModel.transform.rotation * Offset;
-        TargetRotation = FlightModel.transform.rotation;
+        FlightRotation = FlightModel.transform.rotation;
     }
 
     void Update()
     {
+        UpdateLook();
+
+        UpdateFov();
+
         var rate = Rate;
         if (FlightModel.Stalling)
             rate *= StallingRateModifier;
         else if (FlightModel.StrafeMode)
             rate *= StrafeModeRateModifier;
 
-        var SpeedOffset = new Vector3(0.0f, 0.0f, -SpeedFactor * (2.0f * FlightModel.Speed / FlightModel.FlightModelParams.MaxSpeed - 1.0f));
+        FlightRotation = Quaternion.Slerp(FlightRotation, FlightModel.transform.rotation, rate * Time.deltaTime);
 
-        var newTargetPosition = FlightModel.transform.rotation * (Offset + SpeedOffset);
-        TargetPosition = Vector3.Slerp(TargetPosition, newTargetPosition, rate * Time.deltaTime);
+        var SpeedOffset = SpeedFactor * (2.0f * FlightModel.Speed / FlightModel.FlightModelParams.MaxSpeed - 1.0f) * Vector3.back;
 
-        var newTargetRotation = FlightModel.transform.rotation;
-        TargetRotation = Quaternion.Slerp(TargetRotation, newTargetRotation, rate * Time.deltaTime);
+        transform.position = FlightRotation * LookRotation * (Offset + SpeedOffset) + FlightModel.transform.position;
+        transform.rotation = FlightRotation * LookRotation;
 
-        UpdateLook();
-
-        transform.position = LookRotation * TargetPosition + FlightModel.transform.position;
-        transform.rotation = LookRotation * TargetRotation;
-
-        UpdateFov();
     }
 
     //////////////////////////////////////////////////////////////////////////
@@ -74,7 +69,9 @@ public class FlightCamera : MonoBehaviour
     void UpdateLook()
     {
         var lookInput = FlightModel.Controls.Flight.Look.ReadValue<Vector2>();
-        LookRotation = Quaternion.Slerp(LookRotation, Quaternion.Euler(90.0f * lookInput.y, 180.0f * lookInput.x, 0.0f), LookRate * Time.deltaTime);
+
+        var newLookRotation = Quaternion.Euler(90.0f * lookInput.y, 180.0f * lookInput.x, 0.0f);
+        LookRotation = Quaternion.Slerp(LookRotation, newLookRotation, LookRate * Time.deltaTime);
     }
 
     //////////////////////////////////////////////////////////////////////////
