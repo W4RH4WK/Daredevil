@@ -12,6 +12,8 @@ public class HUD : MonoBehaviour
 
     public Text Stalling;
 
+    public RawImage Compass;
+
     FlightModel FlightModel;
 
     void Awake()
@@ -30,6 +32,13 @@ public class HUD : MonoBehaviour
 
         if (Stalling)
             Stalling.enabled = FlightModel.Stalling;
+
+        if (Compass)
+        {
+            var uv = Compass.uvRect;
+            uv.x = Camera.main.transform.rotation.eulerAngles.y / 360.0f;
+            Compass.uvRect = uv;
+        }
 
         UpdateModes();
     }
