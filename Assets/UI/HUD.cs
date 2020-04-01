@@ -8,7 +8,11 @@ public class HUD : MonoBehaviour
 
     public Text Altitude;
 
-    public Text Modes;
+    public Text FocusMode;
+
+    public Text StrafeMode;
+
+    public Text HighGTurn;
 
     public Text Stalling;
 
@@ -54,6 +58,15 @@ public class HUD : MonoBehaviour
             Altitude.text = $"|{altitude,4:0000}";
         }
 
+        if (FocusMode)
+            FocusMode.enabled = FlightModel.FocusMode;
+
+        if (StrafeMode)
+            StrafeMode.enabled = FlightModel.StrafeMode;
+
+        if (HighGTurn)
+            HighGTurn.enabled = FlightModel.HighGTurnMode;
+
         if (Stalling)
             Stalling.enabled = FlightModel.Stalling;
 
@@ -74,17 +87,5 @@ public class HUD : MonoBehaviour
             VelocityVector.transform.position = /*FlightModel.transform.rotation **/ (CrosshairOffset * FlightModel.Velocity.normalized) + FlightModel.transform.position;
             VelocityVector.transform.rotation = Camera.main.transform.rotation;
         }
-
-        UpdateModes();
-    }
-
-    void UpdateModes()
-    {
-        var focus = FlightModel.FocusMode ? "Focus" : "";
-        var strafe = FlightModel.StrafeMode ? "Strafe" : "";
-        var highG = FlightModel.HighGTurnMode ? "HighG" : "";
-
-        if (Modes)
-            Modes.text = $"{focus}\n{strafe}\n{highG}";
     }
 }
