@@ -14,8 +14,6 @@ public class FlightModel : MonoBehaviour
 
     public float Speed => Velocity.magnitude;
 
-    public float Altitude => transform.position.y;
-
     float Thrust;
 
     public bool FocusMode { get; private set; } = false;

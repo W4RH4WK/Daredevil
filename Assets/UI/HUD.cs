@@ -34,7 +34,17 @@ public class HUD : MonoBehaviour
             Speed.text = $"{FlightModel.Speed * 10.0f,4:000}|";
 
         if (Altitude)
-            Altitude.text = $"|{FlightModel.Altitude,4:0000}";
+        {
+            float altitude;
+
+            var ray = new Ray(FlightModel.transform.position, Vector3.down);
+            if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, LayerMask.GetMask("Terrain")))
+                altitude = hit.distance;
+            else
+                altitude = FlightModel.transform.position.y;
+
+            Altitude.text = $"|{altitude,4:0000}";
+        }
 
         if (Stalling)
             Stalling.enabled = FlightModel.Stalling;
