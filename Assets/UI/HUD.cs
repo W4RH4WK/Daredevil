@@ -12,7 +12,7 @@ public class HUD : MonoBehaviour
 
     public Text Stalling;
 
-    public RawImage Compass;
+    public Image Compass;
 
     public GameObject Crosshair;
 
@@ -26,6 +26,14 @@ public class HUD : MonoBehaviour
     {
         FlightModel = FindObjectOfType<FlightModel>();
         Assert.IsNotNull(FlightModel);
+
+        // Materials are shared. Modifying them during runtime causes them to
+        // change permanently. We therefore clone them before modifying any
+        // parameters.
+        {
+            if (Compass)
+                Compass.material = new Material(Compass.material);
+        }
     }
 
     void Update()
@@ -51,9 +59,8 @@ public class HUD : MonoBehaviour
 
         if (Compass)
         {
-            var uv = Compass.uvRect;
-            uv.x = Camera.main.transform.rotation.eulerAngles.y / 360.0f;
-            Compass.uvRect = uv;
+            var offset = Camera.main.transform.rotation.eulerAngles.y / 360.0f;
+            Compass.material.SetTextureOffset("_MainTex", new Vector2(offset, 0.0f));
         }
 
         if (Crosshair)
