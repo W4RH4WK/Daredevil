@@ -14,6 +14,12 @@ public class HUD : MonoBehaviour
 
     public RawImage Compass;
 
+    public GameObject Crosshair;
+
+    public GameObject VelocityVector;
+
+    public float CrosshairOffset = 10.0f;
+
     FlightModel FlightModel;
 
     void Awake()
@@ -38,6 +44,18 @@ public class HUD : MonoBehaviour
             var uv = Compass.uvRect;
             uv.x = Camera.main.transform.rotation.eulerAngles.y / 360.0f;
             Compass.uvRect = uv;
+        }
+
+        if (Crosshair)
+        {
+            Crosshair.transform.position = FlightModel.transform.rotation * (CrosshairOffset * Vector3.forward) + FlightModel.transform.position;
+            Crosshair.transform.rotation = Camera.main.transform.rotation;
+        }
+
+        if (VelocityVector)
+        {
+            VelocityVector.transform.position = /*FlightModel.transform.rotation **/ (CrosshairOffset * FlightModel.Velocity.normalized) + FlightModel.transform.position;
+            VelocityVector.transform.rotation = Camera.main.transform.rotation;
         }
 
         UpdateModes();

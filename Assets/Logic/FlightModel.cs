@@ -10,7 +10,7 @@ public class FlightModel : MonoBehaviour
     // Change in rotation expressed in Euler angles.
     public Vector3 DeltaRotation { get; private set; }
 
-    Vector3 Velocity;
+    public Vector3 Velocity { get; private set; }
 
     public float Speed => Velocity.magnitude;
 
