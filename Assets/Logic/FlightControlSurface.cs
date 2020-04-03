@@ -32,13 +32,22 @@ public class FlightControlSurface : MonoBehaviour
         if (!FlightModel)
             return;
 
+        var pitchInput = FlightModel.Controls.Flight.Pitch.ReadValue<float>();
+        var rollInput = FlightModel.Controls.Flight.Roll.ReadValue<float>();
+        var yawInputLeft = FlightModel.Controls.Flight.YawLeft.ReadValue<float>();
+        var yawInputRight = FlightModel.Controls.Flight.YawRight.ReadValue<float>();
+        var yawInput = yawInputRight - yawInputLeft;
+
+        if (FlightModel.FocusMode)
+        {
+            yawInput = rollInput;
+            rollInput = 0.0f;
+        }
+
         var newTargetRotation = Vector3.zero;
 
         if (Orientation == FcsOrientation.Horizontal)
         {
-            var pitchInput = FlightModel.Controls.Flight.Pitch.ReadValue<float>();
-            var rollInput = FlightModel.Controls.Flight.Roll.ReadValue<float>();
-
             if (Side == FcsSide.Right)
                 rollInput *= -1.0f;
 
@@ -46,10 +55,6 @@ public class FlightControlSurface : MonoBehaviour
         }
         else if (Orientation == FcsOrientation.Vertical)
         {
-            var yawInputLeft = FlightModel.Controls.Flight.YawLeft.ReadValue<float>();
-            var yawInputRight = FlightModel.Controls.Flight.YawRight.ReadValue<float>();
-            var yawInput = yawInputRight - yawInputLeft;
-
             newTargetRotation.y = Factor * -yawInput;
         }
 
