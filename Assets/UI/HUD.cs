@@ -59,13 +59,13 @@ public class HUD : MonoBehaviour
         }
 
         if (FocusMode)
-            FocusMode.enabled = FlightModel.FocusMode;
+            FocusMode.enabled = FlightModel.Input.FocusMode;
 
         if (StrafeMode)
-            StrafeMode.enabled = FlightModel.StrafeMode;
+            StrafeMode.enabled = FlightModel.Input.StrafeMode;
 
         if (HighGTurn)
-            HighGTurn.enabled = FlightModel.HighGTurnMode;
+            HighGTurn.enabled = FlightModel.Input.HighGTurnMode;
 
         if (Stalling)
             Stalling.enabled = FlightModel.Stalling;

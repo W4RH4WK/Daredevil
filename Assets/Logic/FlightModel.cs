@@ -3,6 +3,21 @@ using UnityEngine.Assertions;
 
 public class FlightModel : MonoBehaviour
 {
+    public struct InputData
+    {
+        public float Pitch;
+        public float Roll;
+        public float Yaw;
+
+        public float Throttle;
+
+        public bool FocusMode;
+        public bool StrafeMode;
+        public bool HighGTurnMode;
+    }
+
+    public InputData Input;
+
     public Controls Controls { get; private set; }
 
     public FlightModelParameters FlightModelParams { get; private set; }
@@ -15,14 +30,6 @@ public class FlightModel : MonoBehaviour
     public float Speed => Velocity.magnitude;
 
     float Thrust;
-
-    public bool FocusMode { get; private set; } = false;
-
-    public bool StrafeMode { get; private set; } = false;
-
-    public bool HighGTurnMode { get; private set; } = false;
-
-    //public bool Stalling => StallingDurationLeft > 0.0f;
 
     public bool Stalling { get; private set; } = false;
 
@@ -42,20 +49,42 @@ public class FlightModel : MonoBehaviour
 
     void Update()
     {
+        UpdateInput();
+
         UpdateStalling();
 
         if (!Stalling)
         {
-            UpdateFocusMode();
-
-            UpdateStrafeMode();
-
-            UpdateHighGTurnMode();
-
             UpdateRotation();
 
             UpdateVelocity();
         }
+    }
+
+    void UpdateInput()
+    {
+        Input.Pitch = Controls.Flight.Pitch.ReadValue<float>();
+
+        Input.Roll = Controls.Flight.Roll.ReadValue<float>();
+
+        var yawLeft = Controls.Flight.YawLeft.ReadValue<float>();
+        var yawRight = Controls.Flight.YawRight.ReadValue<float>();
+        Input.Yaw = yawRight - yawLeft;
+
+        var acceleration = Controls.Flight.Accelerate.ReadValue<float>();
+        var deceleration = Controls.Flight.Decelerate.ReadValue<float>();
+        Input.Throttle = acceleration - deceleration;
+
+        Input.FocusMode = yawLeft > 0.9f && yawRight > 0.9f;
+        if (Input.FocusMode)
+        {
+            Input.Yaw = -Input.Roll;
+            Input.Roll = 0.0f;
+        }
+
+        Input.StrafeMode = acceleration > 0.9f && deceleration > 0.9f;
+
+        Input.HighGTurnMode = !Input.StrafeMode && deceleration > 0.9f && Mathf.Abs(Input.Pitch) > 0.78f;
     }
 
     void UpdateStalling()
@@ -83,60 +112,21 @@ public class FlightModel : MonoBehaviour
             Stalling = false;
     }
 
-    void UpdateFocusMode()
-    {
-        var yawInputLeft = Controls.Flight.YawLeft.ReadValue<float>();
-        var yawInputRight = Controls.Flight.YawRight.ReadValue<float>();
-
-        FocusMode = yawInputLeft > 0.9f && yawInputRight > 0.9f;
-    }
-
-    void UpdateStrafeMode()
-    {
-        var accelerationInput = Controls.Flight.Accelerate.ReadValue<float>();
-        var decelerationInput = Controls.Flight.Decelerate.ReadValue<float>();
-
-        StrafeMode = accelerationInput > 0.9f && decelerationInput > 0.9f;
-    }
-
-    void UpdateHighGTurnMode()
-    {
-        var pitchInput = Controls.Flight.Pitch.ReadValue<float>();
-        var decelerationInput = Controls.Flight.Decelerate.ReadValue<float>();
-
-        HighGTurnMode = !StrafeMode && decelerationInput > 0.9f && (pitchInput < -0.78f || pitchInput > 0.78f);
-    }
-
     void UpdateRotation()
     {
-        var pitchInput = Controls.Flight.Pitch.ReadValue<float>();
-        var rollInput = Controls.Flight.Roll.ReadValue<float>();
-        var yawInputLeft = Controls.Flight.YawLeft.ReadValue<float>();
-        var yawInputRight = Controls.Flight.YawRight.ReadValue<float>();
-        var yawInput = yawInputRight - yawInputLeft;
-
-        var pitchRate = pitchInput < 0.0f ? FlightModelParams.PitchUpRate : FlightModelParams.PitchDownRate;
+        var pitchRate = Input.Pitch < 0.0f ? FlightModelParams.PitchUpRate : FlightModelParams.PitchDownRate;
         var rates = new Vector3(pitchRate, FlightModelParams.YawRate, FlightModelParams.RollRate);
 
-        if (FocusMode)
-        {
+        if (Input.FocusMode)
             rates = FlightModelParams.FocusModeRotationRate * Vector3.one;
-
-            yawInput = -rollInput;
-            rollInput = 0.0f;
-        }
-        else if (StrafeMode)
-        {
+        else if (Input.StrafeMode)
             rates *= FlightModelParams.StrafeRotationalResponseRateModifier;
-        }
-        else if (HighGTurnMode)
-        {
+        else if (Input.HighGTurnMode)
             rates.x *= FlightModelParams.HighGTurnPitchRateModifier;
-        }
 
         var mobility = 1.0f - Speed / FlightModelParams.MaxSpeed / FlightModelParams.Mobility;
 
-        var newDeltaRotation = mobility * Vector3.Scale(rates, new Vector3(pitchInput, yawInput, rollInput));
+        var newDeltaRotation = mobility * Vector3.Scale(rates, new Vector3(Input.Pitch, Input.Yaw, Input.Roll));
         DeltaRotation = Vector3.Lerp(DeltaRotation, newDeltaRotation, FlightModelParams.RotationalResponseRate * Time.deltaTime);
 
         transform.Rotate(DeltaRotation * Time.deltaTime);
@@ -154,13 +144,13 @@ public class FlightModel : MonoBehaviour
 
     void UpdateVelocity()
     {
-        var acceleration = FlightModelParams.Acceleration * Controls.Flight.Accelerate.ReadValue<float>();
-        var deceleration = FlightModelParams.Deceleration * Controls.Flight.Decelerate.ReadValue<float>();
+        var factor = Input.Throttle > 0.0f ? FlightModelParams.Acceleration : FlightModelParams.Deceleration;
+        var thrust = factor * Input.Throttle;
 
-        if (HighGTurnMode)
-            deceleration *= FlightModelParams.HighGTurnDecelerationModifier;
+        if (Input.HighGTurnMode)
+            thrust *= FlightModelParams.HighGTurnDecelerationModifier;
 
-        var newThrust = FlightModelParams.BaseThrust + acceleration - deceleration;
+        var newThrust = FlightModelParams.BaseThrust + thrust;
         Thrust = Mathf.Lerp(Thrust, newThrust, FlightModelParams.ThrustResponseRate * Time.deltaTime);
 
         // Simulate speed up / slow down induced by gravity when pitching.
@@ -168,7 +158,7 @@ public class FlightModel : MonoBehaviour
 
         var responseRate = FlightModelParams.BaseResponseRate;
 
-        if (StrafeMode)
+        if (Input.StrafeMode)
             responseRate = FlightModelParams.StrafeResponseRate;
 
         var newVelocity = (Thrust + gravitationalThrust) * transform.forward;

@@ -32,30 +32,20 @@ public class FlightControlSurface : MonoBehaviour
         if (!FlightModel)
             return;
 
-        var pitchInput = FlightModel.Controls.Flight.Pitch.ReadValue<float>();
-        var rollInput = FlightModel.Controls.Flight.Roll.ReadValue<float>();
-        var yawInputLeft = FlightModel.Controls.Flight.YawLeft.ReadValue<float>();
-        var yawInputRight = FlightModel.Controls.Flight.YawRight.ReadValue<float>();
-        var yawInput = yawInputRight - yawInputLeft;
-
-        if (FlightModel.FocusMode)
-        {
-            yawInput = rollInput;
-            rollInput = 0.0f;
-        }
-
         var newTargetRotation = Vector3.zero;
 
         if (Orientation == FcsOrientation.Horizontal)
         {
+            var rollInput = FlightModel.Input.Roll;
+
             if (Side == FcsSide.Right)
                 rollInput *= -1.0f;
 
-            newTargetRotation.x = 0.5f * Factor * (pitchInput + rollInput);
+            newTargetRotation.x = 0.5f * Factor * (FlightModel.Input.Pitch + rollInput);
         }
         else if (Orientation == FcsOrientation.Vertical)
         {
-            newTargetRotation.y = Factor * -yawInput;
+            newTargetRotation.y = Factor * -FlightModel.Input.Yaw;
         }
 
         TargetRotation = Quaternion.Lerp(TargetRotation, Quaternion.Euler(newTargetRotation), Rate * Time.deltaTime);

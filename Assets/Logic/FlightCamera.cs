@@ -50,7 +50,7 @@ public class FlightCamera : MonoBehaviour
         var rate = Rate;
         if (FlightModel.Stalling)
             rate *= StallingRateModifier;
-        else if (FlightModel.StrafeMode)
+        else if (FlightModel.Input.StrafeMode)
             rate *= StrafeModeRateModifier;
 
         FlightRotation = Quaternion.Slerp(FlightRotation, FlightModel.transform.rotation, rate * Time.deltaTime);
@@ -84,9 +84,9 @@ public class FlightCamera : MonoBehaviour
     {
         TargetFov = BaseFov;
 
-        if (FlightModel.FocusMode)
+        if (FlightModel.Input.FocusMode)
             TargetFov *= FocusModeFovModifier;
-        else if (FlightModel.StrafeMode)
+        else if (FlightModel.Input.StrafeMode)
             TargetFov *= StrafeModeFovModifier;
 
         Camera.fieldOfView = Mathf.SmoothDamp(Camera.fieldOfView, TargetFov, ref TargetFovVelocity, TargetFovSmoothTime);
