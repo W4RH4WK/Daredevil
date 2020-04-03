@@ -142,8 +142,14 @@ public class FlightModel : MonoBehaviour
         transform.Rotate(DeltaRotation * Time.deltaTime);
 
         // Simulate rotation induced by lift when banking.
-        var lateralDrift = FlightModelParams.BankingDriftRate * Mathf.Sin(-transform.eulerAngles.z * Mathf.Deg2Rad) * Time.deltaTime;
-        transform.Rotate(0.0f, lateralDrift, 0.0f, Space.World);
+        {
+            var lateralDrift = FlightModelParams.BankingDriftRate * Mathf.Sin(-transform.eulerAngles.z * Mathf.Deg2Rad) * Time.deltaTime;
+            transform.Rotate(0.0f, lateralDrift, 0.0f, Space.World);
+
+            var liftLoss = FlightModelParams.BankingLiftLossRate * Mathf.Sin(0.5f * transform.eulerAngles.z * Mathf.Deg2Rad) * Time.deltaTime;
+            liftLoss *= FlightModelParams.BankingLiftLossSpeedImpact * (1.0f - Speed / FlightModelParams.MaxSpeed);
+            transform.rotation *= Quaternion.Euler(-liftLoss, 0.0f, 0.0f);
+        }
     }
 
     void UpdateVelocity()
@@ -160,16 +166,12 @@ public class FlightModel : MonoBehaviour
         // Simulate speed up / slow down induced by gravity when pitching.
         var gravitationalThrust = FlightModelParams.FlightGravity * Mathf.Sin(transform.eulerAngles.x * Mathf.Deg2Rad);
 
-        // Simulate loss of lift when rolling.
-        var liftLoss = FlightModelParams.BankingLiftLoss * Mathf.Sin(0.5f * transform.eulerAngles.z * Mathf.Deg2Rad);
-        liftLoss *= FlightModelParams.BankingLiftLossSpeedImpact * (1.0f - Speed / FlightModelParams.MaxSpeed);
-
         var responseRate = FlightModelParams.BaseResponseRate;
 
         if (StrafeMode)
             responseRate = FlightModelParams.StrafeResponseRate;
 
-        var newVelocity = (Thrust + gravitationalThrust) * transform.forward + liftLoss * Vector3.down;
+        var newVelocity = (Thrust + gravitationalThrust) * transform.forward;
         Velocity = Vector3.Lerp(Velocity, newVelocity, responseRate * Time.deltaTime);
         Velocity = Vector3.ClampMagnitude(Velocity, FlightModelParams.MaxSpeed);
 

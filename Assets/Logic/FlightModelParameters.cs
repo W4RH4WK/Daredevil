@@ -61,7 +61,7 @@ public class FlightModelParameters : MonoBehaviour
 
     public float BankingDriftRate = 10.0f;
 
-    public float BankingLiftLoss = 8.0f;
+    public float BankingLiftLossRate = 8.0f;
 
     public float BankingLiftLossSpeedImpact = 1.0f;
 }
