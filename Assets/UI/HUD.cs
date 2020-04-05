@@ -118,16 +118,48 @@ public class HUD : MonoBehaviour
         while (targetEnumerator.MoveNext() && targetBracketEnumerator.MoveNext())
         {
             var target = targetEnumerator.Current;
-            var screenPosition = Camera.main.WorldToScreenPoint(target.transform.position);
-            if (screenPosition.z < 0.0f)
-                continue;
+
+            var viewportPosition = Camera.main.WorldToViewportPoint(target.transform.position);
+
+            if (!IsInsideViewport(viewportPosition))
+            {
+                var center = new Vector3(0.5f, 0.5f);
+                viewportPosition -= center;
+
+                if (viewportPosition.z < 0.0f)
+                    viewportPosition *= -1;
+
+                var angle = Mathf.Atan2(viewportPosition.y, viewportPosition.x);
+                angle -= 90.0f * Mathf.Deg2Rad;
+
+                var cos = Mathf.Cos(angle);
+                var sin = Mathf.Sin(angle);
+                var m = cos / sin;
+
+                if (cos > 0)
+                    viewportPosition = new Vector3(-0.5f / m, 0.5f);
+                else
+                    viewportPosition = new Vector3(0.5f / m, -0.5f);
+
+                if (viewportPosition.x > 0.5f)
+                    viewportPosition = new Vector3(0.5f, -0.5f * m);
+                else if (viewportPosition.x < -0.5f)
+                    viewportPosition = new Vector3(-0.5f, 0.5f * m);
+
+                viewportPosition += center;
+            }
 
             var targetBracket = targetBracketEnumerator.Current;
+            targetBracket.transform.position = Camera.main.ViewportToScreenPoint(viewportPosition);
             targetBracket.SetActive(true);
-            targetBracket.transform.position = screenPosition;
         }
 
         while (targetBracketEnumerator.MoveNext())
             targetBracketEnumerator.Current.SetActive(false);
+    }
+
+    static bool IsInsideViewport(Vector3 point)
+    {
+        return point.x > 0.0f && point.x < 1.0f && point.y > 0.0f && point.y < 1.0f && point.z > 0.0f;
     }
 }
