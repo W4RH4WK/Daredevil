@@ -70,7 +70,7 @@ public class FlightCamera : MonoBehaviour
     {
         var lookInput = FlightModel.Controls.Flight.Look.ReadValue<Vector2>();
 
-        var newLookRotation = Quaternion.Euler(90.0f * lookInput.y, 180.0f * lookInput.x, 0.0f);
+        var newLookRotation = Quaternion.Euler(-90.0f * lookInput.y, 180.0f * lookInput.x, 0.0f);
         LookRotation = Quaternion.Slerp(LookRotation, newLookRotation, LookRate * Time.deltaTime);
     }
 
