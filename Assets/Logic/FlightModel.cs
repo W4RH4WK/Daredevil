@@ -132,7 +132,7 @@ public class FlightModel : MonoBehaviour
         transform.Rotate(DeltaRotation * Time.deltaTime);
 
         // Simulate rotation induced by lift when banking.
-        {
+        if (!Input.FocusMode) {
             var lateralDrift = FlightModelParams.BankingDriftRate * Mathf.Sin(-transform.eulerAngles.z * Mathf.Deg2Rad) * Time.deltaTime;
             transform.Rotate(0.0f, lateralDrift, 0.0f, Space.World);
 
