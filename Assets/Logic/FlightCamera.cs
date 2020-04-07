@@ -7,7 +7,7 @@ public class FlightCamera : MonoBehaviour
 
     public Vector3 Offset = new Vector3(0.0f, 0.8f, -4.7f);
 
-    public float Rate = 5.0f;
+    public float Rate = 10.0f;
 
     public float LookRate = 5.0f;
 
