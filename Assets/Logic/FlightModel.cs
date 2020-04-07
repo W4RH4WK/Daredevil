@@ -24,6 +24,7 @@ public class FlightModel : MonoBehaviour
 
     // Change in rotation expressed in Euler angles.
     public Vector3 DeltaRotation { get; private set; }
+    Vector3 DeltaRotationVelocity;
 
     public Vector3 Velocity { get; private set; }
 
@@ -114,30 +115,50 @@ public class FlightModel : MonoBehaviour
 
     void UpdateRotation()
     {
-        var pitchRate = Input.Pitch < 0.0f ? FlightModelParams.PitchUpRate : FlightModelParams.PitchDownRate;
-        var rates = new Vector3(pitchRate, FlightModelParams.YawRate, FlightModelParams.RollRate);
+        var rates = FlightModelParams.PitchYawRollRate;
+        {
+            if (Input.Pitch < 0.0f)
+                rates.x *= FlightModelParams.PitchUpRateModifier;
 
+            if (Input.FocusMode)
+                rates = FlightModelParams.FocusPitchYawRollRate * Vector3.one;
+            else if (Input.StrafeMode)
+                rates *= FlightModelParams.StrafePitchYawRollRateModifier;
+            else if (Input.HighGTurnMode)
+                rates.x *= FlightModelParams.HighGTurnPitchRateModifier;
+        }
+
+        float mobility;
+        {
+            var mobilitySlope = (FlightModelParams.Mobility - 1) / (FlightModelParams.MaxSpeed - FlightModelParams.BaseThrust);
+            mobility = mobilitySlope * Speed + 1 - mobilitySlope * FlightModelParams.BaseThrust;
+
+            if (Input.StrafeMode)
+                mobility *= FlightModelParams.StrafePitchYawRollRateModifier;
+        }
+
+        var responseRate = mobility * FlightModelParams.PitchYawRollResponseRate;
+
+        var responseMaxSpeed = mobility * FlightModelParams.PitchYawRollResponseMaxSpeed;
         if (Input.FocusMode)
-            rates = FlightModelParams.FocusModeRotationRate * Vector3.one;
-        else if (Input.StrafeMode)
-            rates *= FlightModelParams.StrafeRotationalResponseRateModifier;
-        else if (Input.HighGTurnMode)
-            rates.x *= FlightModelParams.HighGTurnPitchRateModifier;
+            responseMaxSpeed = FlightModelParams.FocusPitchYawRollResponseMaxSpeed * Vector3.one;
 
-        var mobility = 1.0f - Speed / FlightModelParams.MaxSpeed / FlightModelParams.Mobility;
-
-        var newDeltaRotation = mobility * Vector3.Scale(rates, new Vector3(Input.Pitch, Input.Yaw, Input.Roll));
-        DeltaRotation = Vector3.Lerp(DeltaRotation, newDeltaRotation, FlightModelParams.RotationalResponseRate * Time.deltaTime);
+        var newDeltaRotation = Vector3.Scale(rates, new Vector3(Input.Pitch, Input.Yaw, Input.Roll));
+        DeltaRotation = new Vector3(
+            Mathf.SmoothDamp(DeltaRotation.x, newDeltaRotation.x, ref DeltaRotationVelocity.x, 1.0f / responseRate.x, responseMaxSpeed.x),
+            Mathf.SmoothDamp(DeltaRotation.y, newDeltaRotation.y, ref DeltaRotationVelocity.y, 1.0f / responseRate.y, responseMaxSpeed.y),
+            Mathf.SmoothDamp(DeltaRotation.z, newDeltaRotation.z, ref DeltaRotationVelocity.z, 1.0f / responseRate.z, responseMaxSpeed.z)
+        );
 
         transform.Rotate(DeltaRotation * Time.deltaTime);
 
         // Simulate rotation induced by lift when banking.
-        if (!Input.FocusMode) {
+        if (!Input.FocusMode)
+        {
             var lateralDrift = FlightModelParams.BankingDriftRate * Mathf.Sin(-transform.eulerAngles.z * Mathf.Deg2Rad) * Time.deltaTime;
             transform.Rotate(0.0f, lateralDrift, 0.0f, Space.World);
 
             var liftLoss = FlightModelParams.BankingLiftLossRate * Mathf.Sin(0.5f * transform.eulerAngles.z * Mathf.Deg2Rad) * Time.deltaTime;
-            liftLoss *= FlightModelParams.BankingLiftLossSpeedImpact * (1.0f - Speed / FlightModelParams.MaxSpeed);
             transform.rotation *= Quaternion.Euler(-liftLoss, 0.0f, 0.0f);
         }
     }
@@ -156,10 +177,10 @@ public class FlightModel : MonoBehaviour
         // Simulate speed up / slow down induced by gravity when pitching.
         var gravitationalThrust = FlightModelParams.FlightGravity * Mathf.Sin(transform.eulerAngles.x * Mathf.Deg2Rad);
 
-        var responseRate = FlightModelParams.BaseResponseRate;
+        var responseRate = FlightModelParams.VelocityVectorResponseRate;
 
         if (Input.StrafeMode)
-            responseRate = FlightModelParams.StrafeResponseRate;
+            responseRate = FlightModelParams.StrafeVelocityVectorResponseRate;
 
         var newVelocity = (Thrust + gravitationalThrust) * transform.forward;
         Velocity = Vector3.Lerp(Velocity, newVelocity, responseRate * Time.deltaTime);

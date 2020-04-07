@@ -47,6 +47,7 @@ MonoBehaviour:
   Orientation: 0
   Side: 0
   Factor: 40
+  Rate: 60
 --- !u!1 &825084522448105294
 GameObject:
   m_ObjectHideFlags: 0
@@ -380,6 +381,7 @@ MonoBehaviour:
   Orientation: 0
   Side: 1
   Factor: 40
+  Rate: 60
 --- !u!1 &1811145278258901991
 GameObject:
   m_ObjectHideFlags: 0
@@ -800,33 +802,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 88abc0739c2f6714b83068815794ce4c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  BaseResponseRate: 2.8
-  RotationalResponseRate: 10
-  ThrustResponseRate: 0.45
-  Mobility: 2.8
-  StrafeResponseRate: 0.35
-  StrafeRotationalResponseRateModifier: 1.8
+  PitchYawRollRate: {x: 30, y: 8, z: 100}
+  PitchYawRollResponseRate: {x: 10, y: 10, z: 10}
+  PitchYawRollResponseMaxSpeed: {x: 120, y: 20, z: 160}
+  PitchUpRateModifier: 1.25
+  FocusPitchYawRollRate: 25
+  FocusPitchYawRollResponseMaxSpeed: 100
+  StrafeVelocityVectorResponseRate: 0.2
+  StrafePitchYawRollRateModifier: 1.8
   HighGTurnPitchRateModifier: 2
   HighGTurnDecelerationModifier: 1.5
-  StallingAttackSpeed: 20
-  StallingReleaseSpeed: 25
-  StallingMinimumDuration: 1.5
-  StallingRotationRate: 0.7
-  StallingGravity: 15
-  StallingThrustCutFactor: 0.5
-  PitchUpRate: 65
-  PitchDownRate: 45
-  RollRate: 120
-  YawRate: 12
-  FocusModeRotationRate: 35
+  VelocityVectorResponseRate: 5
   BaseThrust: 32
+  ThrustResponseRate: 0.45
+  Mobility: 1.5
   MaxSpeed: 80
   Acceleration: 45
   Deceleration: 15
   FlightGravity: 10
-  BankingDriftRate: 10
-  BankingLiftLoss: 8
-  BankingLiftLossSpeedImpact: 1
+  StallingAttackSpeed: 25
+  StallingReleaseSpeed: 30
+  StallingMinimumDuration: 1.5
+  StallingRotationRate: 0.7
+  StallingGravity: 15
+  StallingThrustCutFactor: 0.5
+  BankingDriftRate: 2
+  BankingLiftLossRate: 2
 --- !u!1 &3371529776349582560
 GameObject:
   m_ObjectHideFlags: 0
@@ -874,6 +875,7 @@ MonoBehaviour:
   Orientation: 0
   Side: 1
   Factor: 40
+  Rate: 60
 --- !u!1 &3382496864032146640
 GameObject:
   m_ObjectHideFlags: 0
@@ -1000,6 +1002,7 @@ MonoBehaviour:
   Orientation: 0
   Side: 0
   Factor: 40
+  Rate: 60
 --- !u!1 &3925877854337154828
 GameObject:
   m_ObjectHideFlags: 0
@@ -1254,6 +1257,7 @@ MonoBehaviour:
   Orientation: 1
   Side: 0
   Factor: 40
+  Rate: 60
 --- !u!1 &6606139755748196264
 GameObject:
   m_ObjectHideFlags: 0
@@ -1301,6 +1305,7 @@ MonoBehaviour:
   Orientation: 0
   Side: 1
   Factor: 40
+  Rate: 60
 --- !u!1 &6617632914740050083
 GameObject:
   m_ObjectHideFlags: 0
@@ -1476,6 +1481,7 @@ MonoBehaviour:
   Orientation: 0
   Side: 0
   Factor: 40
+  Rate: 60
 --- !u!1 &8193717269258447333
 GameObject:
   m_ObjectHideFlags: 0
