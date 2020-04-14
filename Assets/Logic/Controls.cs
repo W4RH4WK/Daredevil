@@ -73,6 +73,14 @@ public class @Controls : IInputActionCollection, IDisposable
                     ""expectedControlType"": ""Vector2"",
                     ""processors"": """",
                     ""interactions"": """"
+                },
+                {
+                    ""name"": ""Target"",
+                    ""type"": ""Button"",
+                    ""id"": ""210f2dfa-6d50-4e2f-b923-9ff8635b7d53"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """"
                 }
             ],
             ""bindings"": [
@@ -152,6 +160,17 @@ public class @Controls : IInputActionCollection, IDisposable
                     ""action"": ""Look"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""c3b71a8b-b178-4705-a1b8-47018935c847"",
+                    ""path"": ""<Gamepad>/buttonNorth"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Target"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -167,6 +186,7 @@ public class @Controls : IInputActionCollection, IDisposable
         m_Flight_Accelerate = m_Flight.FindAction("Accelerate", throwIfNotFound: true);
         m_Flight_Decelerate = m_Flight.FindAction("Decelerate", throwIfNotFound: true);
         m_Flight_Look = m_Flight.FindAction("Look", throwIfNotFound: true);
+        m_Flight_Target = m_Flight.FindAction("Target", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -223,6 +243,7 @@ public class @Controls : IInputActionCollection, IDisposable
     private readonly InputAction m_Flight_Accelerate;
     private readonly InputAction m_Flight_Decelerate;
     private readonly InputAction m_Flight_Look;
+    private readonly InputAction m_Flight_Target;
     public struct FlightActions
     {
         private @Controls m_Wrapper;
@@ -234,6 +255,7 @@ public class @Controls : IInputActionCollection, IDisposable
         public InputAction @Accelerate => m_Wrapper.m_Flight_Accelerate;
         public InputAction @Decelerate => m_Wrapper.m_Flight_Decelerate;
         public InputAction @Look => m_Wrapper.m_Flight_Look;
+        public InputAction @Target => m_Wrapper.m_Flight_Target;
         public InputActionMap Get() { return m_Wrapper.m_Flight; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -264,6 +286,9 @@ public class @Controls : IInputActionCollection, IDisposable
                 @Look.started -= m_Wrapper.m_FlightActionsCallbackInterface.OnLook;
                 @Look.performed -= m_Wrapper.m_FlightActionsCallbackInterface.OnLook;
                 @Look.canceled -= m_Wrapper.m_FlightActionsCallbackInterface.OnLook;
+                @Target.started -= m_Wrapper.m_FlightActionsCallbackInterface.OnTarget;
+                @Target.performed -= m_Wrapper.m_FlightActionsCallbackInterface.OnTarget;
+                @Target.canceled -= m_Wrapper.m_FlightActionsCallbackInterface.OnTarget;
             }
             m_Wrapper.m_FlightActionsCallbackInterface = instance;
             if (instance != null)
@@ -289,6 +314,9 @@ public class @Controls : IInputActionCollection, IDisposable
                 @Look.started += instance.OnLook;
                 @Look.performed += instance.OnLook;
                 @Look.canceled += instance.OnLook;
+                @Target.started += instance.OnTarget;
+                @Target.performed += instance.OnTarget;
+                @Target.canceled += instance.OnTarget;
             }
         }
     }
@@ -302,5 +330,6 @@ public class @Controls : IInputActionCollection, IDisposable
         void OnAccelerate(InputAction.CallbackContext context);
         void OnDecelerate(InputAction.CallbackContext context);
         void OnLook(InputAction.CallbackContext context);
+        void OnTarget(InputAction.CallbackContext context);
     }
 }

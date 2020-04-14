@@ -27,6 +27,8 @@ public class HUD : MonoBehaviour
 
     public GameObject TargetBracketPrefab;
 
+    public GameObject ActiveTargetBracket;
+
     IList<GameObject> TargetBrackets = new List<GameObject>();
 
     FlightModel FlightModel;
@@ -107,7 +109,22 @@ public class HUD : MonoBehaviour
             VelocityVector.transform.rotation = Camera.main.transform.rotation;
         }
 
+        UpdateActiveTargetBracket();
+
         UpdateTargetBrackets();
+    }
+
+    void UpdateActiveTargetBracket()
+    {
+        if (CombatModel.ActiveTarget)
+        {
+            ActiveTargetBracket.transform.position = TargetScreenPosition(CombatModel.ActiveTarget);
+            ActiveTargetBracket.SetActive(true);
+        }
+        else
+        {
+            ActiveTargetBracket.SetActive(false);
+        }
     }
 
     void UpdateTargetBrackets()
@@ -118,44 +135,52 @@ public class HUD : MonoBehaviour
         while (targetEnumerator.MoveNext() && targetBracketEnumerator.MoveNext())
         {
             var target = targetEnumerator.Current;
-
-            var viewportPosition = Camera.main.WorldToViewportPoint(target.transform.position);
-
-            if (!IsInsideViewport(viewportPosition))
-            {
-                var center = new Vector3(0.5f, 0.5f);
-                viewportPosition -= center;
-
-                if (viewportPosition.z < 0.0f)
-                    viewportPosition *= -1;
-
-                var angle = Mathf.Atan2(viewportPosition.y, viewportPosition.x);
-                angle -= 90.0f * Mathf.Deg2Rad;
-
-                var cos = Mathf.Cos(angle);
-                var sin = Mathf.Sin(angle);
-                var m = cos / sin;
-
-                if (cos > 0)
-                    viewportPosition = new Vector3(-0.5f / m, 0.5f);
-                else
-                    viewportPosition = new Vector3(0.5f / m, -0.5f);
-
-                if (viewportPosition.x > 0.5f)
-                    viewportPosition = new Vector3(0.5f, -0.5f * m);
-                else if (viewportPosition.x < -0.5f)
-                    viewportPosition = new Vector3(-0.5f, 0.5f * m);
-
-                viewportPosition += center;
-            }
-
             var targetBracket = targetBracketEnumerator.Current;
-            targetBracket.transform.position = Camera.main.ViewportToScreenPoint(viewportPosition);
+
+            targetBracket.transform.position = TargetScreenPosition(target);
             targetBracket.SetActive(true);
         }
 
+        if (targetEnumerator.Current)
+            Debug.LogWarning("To few target brackets available");
+
         while (targetBracketEnumerator.MoveNext())
             targetBracketEnumerator.Current.SetActive(false);
+    }
+
+    Vector3 TargetScreenPosition(Target target)
+    {
+        var viewportPosition = Camera.main.WorldToViewportPoint(target.transform.position);
+
+        if (!IsInsideViewport(viewportPosition))
+        {
+            var center = new Vector3(0.5f, 0.5f);
+            viewportPosition -= center;
+
+            if (viewportPosition.z < 0.0f)
+                viewportPosition *= -1;
+
+            var angle = Mathf.Atan2(viewportPosition.y, viewportPosition.x);
+            angle -= 90.0f * Mathf.Deg2Rad;
+
+            var cos = Mathf.Cos(angle);
+            var sin = Mathf.Sin(angle);
+            var m = cos / sin;
+
+            if (cos > 0)
+                viewportPosition = new Vector3(-0.5f / m, 0.5f);
+            else
+                viewportPosition = new Vector3(0.5f / m, -0.5f);
+
+            if (viewportPosition.x > 0.5f)
+                viewportPosition = new Vector3(0.5f, -0.5f * m);
+            else if (viewportPosition.x < -0.5f)
+                viewportPosition = new Vector3(-0.5f, 0.5f * m);
+
+            viewportPosition += center;
+        }
+
+        return Camera.main.ViewportToScreenPoint(viewportPosition);
     }
 
     static bool IsInsideViewport(Vector3 point)
