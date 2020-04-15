@@ -41,7 +41,7 @@ public class FlightControlSurface : MonoBehaviour
             if (Side == FcsSide.Right)
                 rollInput *= -1.0f;
 
-            newTargetRotation.x = 0.5f * Factor * (Controls.PitchYawRoll.x + rollInput);
+            newTargetRotation.x = 0.5f * Factor * (-Controls.PitchYawRoll.x + rollInput);
         }
         else if (Orientation == FcsOrientation.Vertical)
         {
