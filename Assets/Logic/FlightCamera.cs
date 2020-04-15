@@ -4,15 +4,13 @@ using UnityEngine.Assertions;
 [RequireComponent(typeof(Camera))]
 public class FlightCamera : MonoBehaviour
 {
-    public FlightModel FlightModel;
-
     public Vector3 Offset = new Vector3(0.0f, 0.8f, -4.7f);
 
-    public float Rate = 10.0f;
+    public float Rate = 5.0f;
 
     public float LookRate = 5.0f;
 
-    public float SpeedFactor = 2.0f;
+    public float SpeedFactor = 1.5f;
 
     public float FocusModeFovModifier = 0.7f;
 
@@ -30,6 +28,12 @@ public class FlightCamera : MonoBehaviour
 
     void UpdateLook()
     {
+        if (Controls.LookAtTarget && CombatModel.ActiveTarget)
+        {
+            LookRotation = Quaternion.identity;
+            return;
+        }
+
         var lookInput = Controls.Look;
 
         var newLookRotation = Quaternion.Euler(-90.0f * lookInput.y, 180.0f * lookInput.x, 0.0f);
@@ -56,21 +60,29 @@ public class FlightCamera : MonoBehaviour
 
     //////////////////////////////////////////////////////////////////////////
 
+    Camera Camera;
+
     Controls Controls;
 
-    Camera Camera;
+    FlightModel FlightModel;
+
+    CombatModel CombatModel;
 
     Quaternion FlightRotation;
 
     void Awake()
     {
-        Assert.IsNotNull(FlightModel);
+        Camera = GetComponent<Camera>();
+        Assert.IsNotNull(Camera);
 
         Controls = FindObjectOfType<Controls>();
         Assert.IsNotNull(Controls);
 
-        Camera = GetComponent<Camera>();
-        Assert.IsNotNull(Camera);
+        FlightModel = FindObjectOfType<FlightModel>();
+        Assert.IsNotNull(FlightModel);
+
+        CombatModel = FindObjectOfType<CombatModel>();
+        Assert.IsNotNull(CombatModel);
 
         BaseFov = Camera.fieldOfView;
         FlightRotation = FlightModel.transform.rotation;
@@ -88,7 +100,14 @@ public class FlightCamera : MonoBehaviour
         else if (Controls.StrafeMode)
             rate *= StrafeModeRateModifier;
 
-        FlightRotation = Quaternion.Slerp(FlightRotation, FlightModel.transform.rotation, rate * Time.deltaTime);
+        var newFlightRotation = FlightModel.transform.rotation;
+        if (Controls.LookAtTarget && CombatModel.ActiveTarget)
+        {
+            var forward = CombatModel.ActiveTarget.transform.position - transform.position;
+            newFlightRotation = Quaternion.LookRotation(forward, FlightModel.transform.up);
+        }
+
+        FlightRotation = Quaternion.Slerp(FlightRotation, newFlightRotation, rate * Time.deltaTime);
 
         var SpeedOffset = SpeedFactor * (2.0f * FlightModel.Speed / FlightModel.FlightModelParams.MaxSpeed - 1.0f) * Vector3.back;
 

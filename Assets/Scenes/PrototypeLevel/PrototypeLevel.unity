@@ -130,6 +130,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 119814188}
+  - component: {fileID: 119814191}
   - component: {fileID: 119814189}
   - component: {fileID: 119814190}
   m_Layer: 0
@@ -179,6 +180,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   TargetRange: 500
+--- !u!114 &119814191
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 119814187}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b97538611a7fca741923fb710cfdb06f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  HoldTime: 0.5
 --- !u!224 &463387586 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 66349607921519096, guid: b3e87fb26d899384ca2225896b80c6d7,
@@ -281,11 +295,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 014584ad3db0557478f1c0e96ce56a35, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  FlightModel: {fileID: 119814189}
   Offset: {x: 0, y: 0.8, z: -4.7}
   Rate: 5
   LookRate: 5
-  SpeedFactor: 2
+  SpeedFactor: 1.5
   FocusModeFovModifier: 0.7
   StrafeModeFovModifier: 1.2
   TargetFovSmoothTime: 0.2

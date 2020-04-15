@@ -47,12 +47,32 @@ public class Controls : MonoBehaviour
 
     public bool NextTarget { get; private set; }
 
+    public bool LookAtTarget { get; private set; }
+
+    float NextTargetHoldTime = 0.0f;
+
     void UpdateTargetting()
     {
-        NextTarget = InputActions.Flight.Target.triggered;
+        // reset
+        NextTarget = false;
+
+        var nextTargetInput = InputActions.Flight.Target.ReadValue<float>() > 0.9f;
+
+        if (nextTargetInput)
+            NextTargetHoldTime += Time.deltaTime;
+
+        LookAtTarget = nextTargetInput && NextTargetHoldTime > HoldTime;
+
+        // trigger next target on button release
+        NextTarget = !nextTargetInput && 0.0f < NextTargetHoldTime && NextTargetHoldTime < HoldTime;
+
+        if (!nextTargetInput)
+            NextTargetHoldTime = 0.0f;
     }
 
     //////////////////////////////////////////////////////////////////////////
+
+    static float HoldTime = 0.3f;
 
     InputActions InputActions;
 
