@@ -31,12 +31,17 @@ public class HUD : MonoBehaviour
 
     IList<GameObject> TargetBrackets = new List<GameObject>();
 
+    Controls Controls;
+
     FlightModel FlightModel;
 
     CombatModel CombatModel;
 
     void Awake()
     {
+        Controls = FindObjectOfType<Controls>();
+        Assert.IsNotNull(Controls);
+
         FlightModel = FindObjectOfType<FlightModel>();
         Assert.IsNotNull(FlightModel);
 
@@ -80,13 +85,13 @@ public class HUD : MonoBehaviour
         }
 
         if (FocusMode)
-            FocusMode.enabled = FlightModel.Input.FocusMode;
+            FocusMode.enabled = Controls.FocusMode;
 
         if (StrafeMode)
-            StrafeMode.enabled = FlightModel.Input.StrafeMode;
+            StrafeMode.enabled = Controls.StrafeMode;
 
         if (HighGTurn)
-            HighGTurn.enabled = FlightModel.Input.HighGTurnMode;
+            HighGTurn.enabled = Controls.HighGTurnMode;
 
         if (Stalling)
             Stalling.enabled = FlightModel.Stalling;

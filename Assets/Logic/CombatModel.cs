@@ -1,19 +1,35 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Assertions;
 
+[RequireComponent(typeof(Controls))]
 public class CombatModel : MonoBehaviour
 {
     public float TargetRange = 500.0f;
 
+    public IEnumerator<Target> GetTargetsEnumerator() => Targets.GetEnumerator();
+
     IList<Target> Targets = new List<Target>();
 
-    public IEnumerator<Target> GetTargetsEnumerator() => Targets.GetEnumerator();
+    void ScanForTargets()
+    {
+        Targets.Clear();
+        foreach (var target in FindObjectsOfType<Target>())
+        {
+            if (target && Vector3.Distance(transform.position, target.transform.position) <= TargetRange)
+                Targets.Add(target);
+        }
+
+        if (!Targets.Contains(ActiveTarget))
+            ActiveTarget = null;
+    }
+
+    //////////////////////////////////////////////////////////////////////////
 
     public Target ActiveTarget { get; private set; }
 
     Queue<Target> RecentActiveTargets = new Queue<Target>();
-
     float RecentActiveTargetClearTime = 0.0f;
 
     public void SelectNextActiveTarget()
@@ -57,34 +73,6 @@ public class CombatModel : MonoBehaviour
         }
     }
 
-    Controls Controls;
-
-    void Awake()
-    {
-        Controls = FindObjectOfType<FlightModel>().Controls;
-    }
-
-    void Update()
-    {
-        ScanForTargets();
-
-        if (Controls.Flight.Target.triggered)
-            SelectNextActiveTarget();
-    }
-
-    void ScanForTargets()
-    {
-        Targets.Clear();
-        foreach (var target in FindObjectsOfType<Target>())
-        {
-            if (target && Vector3.Distance(transform.position, target.transform.position) <= TargetRange)
-                Targets.Add(target);
-        }
-
-        if (!Targets.Contains(ActiveTarget))
-            ActiveTarget = null;
-    }
-
     static bool IsInsideViewport(Target target)
     {
         var point = Camera.main.WorldToViewportPoint(target.transform.position);
@@ -101,5 +89,23 @@ public class CombatModel : MonoBehaviour
         pos -= new Vector3(0.5f, 0.5f);
 
         return pos.magnitude;
+    }
+
+    //////////////////////////////////////////////////////////////////////////
+
+    Controls Controls;
+
+    void Awake()
+    {
+        Controls = GetComponent<Controls>();
+        Assert.IsNotNull(Controls);
+    }
+
+    void Update()
+    {
+        ScanForTargets();
+
+        if (Controls.NextTarget)
+            SelectNextActiveTarget();
     }
 }

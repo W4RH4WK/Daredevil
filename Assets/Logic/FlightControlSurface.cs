@@ -14,7 +14,7 @@ public class FlightControlSurface : MonoBehaviour
 
     public float Rate = 60.0f;
 
-    FlightModel FlightModel;
+    Controls Controls;
 
     Quaternion InitialRotation;
 
@@ -22,30 +22,30 @@ public class FlightControlSurface : MonoBehaviour
 
     void Awake()
     {
-        FlightModel = GetComponentInParent<FlightModel>();
+        Controls = GetComponentInParent<Controls>();
 
         InitialRotation = transform.localRotation;
     }
 
     void Update()
     {
-        if (!FlightModel)
+        if (!Controls)
             return;
 
         var newTargetRotation = Vector3.zero;
 
         if (Orientation == FcsOrientation.Horizontal)
         {
-            var rollInput = FlightModel.Input.Roll;
+            var rollInput = Controls.PitchYawRoll.z;
 
             if (Side == FcsSide.Right)
                 rollInput *= -1.0f;
 
-            newTargetRotation.x = 0.5f * Factor * (FlightModel.Input.Pitch + rollInput);
+            newTargetRotation.x = 0.5f * Factor * (Controls.PitchYawRoll.x + rollInput);
         }
         else if (Orientation == FcsOrientation.Vertical)
         {
-            newTargetRotation.y = Factor * -FlightModel.Input.Yaw;
+            newTargetRotation.y = Factor * -Controls.PitchYawRoll.y;
         }
 
         TargetRotation = Quaternion.Lerp(TargetRotation, Quaternion.Euler(newTargetRotation), Rate * Time.deltaTime);
