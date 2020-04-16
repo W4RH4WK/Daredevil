@@ -34,6 +34,8 @@ public class CombatModel : MonoBehaviour
 
     public void SelectNextActiveTarget()
     {
+        var previousActiveTarget = ActiveTarget;
+
         if (RecentActiveTargetClearTime < Time.time)
         {
             RecentActiveTargets.Clear();
@@ -71,6 +73,9 @@ public class CombatModel : MonoBehaviour
             while (RecentActiveTargets.Count > 5)
                 RecentActiveTargets.Dequeue();
         }
+
+        if (previousActiveTarget != ActiveTarget)
+            LockOnTimeElapsed = 0.0f;
     }
 
     static bool IsInsideViewport(Target target)
@@ -93,6 +98,35 @@ public class CombatModel : MonoBehaviour
 
     //////////////////////////////////////////////////////////////////////////
 
+    public float LockOnAngle = 25.0f;
+
+    public float LockOnTime = 0.5f;
+
+    public float LockOnTimeElapsed { get; private set; } = 0.0f;
+
+    public bool LockingOn => LockOnTimeElapsed > 0.0f && !LockedOn;
+
+    public bool LockedOn => LockOnTimeElapsed >= LockOnTime;
+
+    void UpdateLockOn()
+    {
+        if (!ActiveTarget)
+        {
+            LockOnTimeElapsed = 0.0f;
+            return;
+        }
+
+        var toTarget = ActiveTarget.transform.position - transform.position;
+        var angle = Vector3.Angle(transform.forward, toTarget);
+
+        if (angle <= LockOnAngle)
+            LockOnTimeElapsed += Time.deltaTime;
+        else
+            LockOnTimeElapsed = 0.0f;
+    }
+
+    //////////////////////////////////////////////////////////////////////////
+
     Controls Controls;
 
     void Awake()
@@ -104,6 +138,8 @@ public class CombatModel : MonoBehaviour
     void Update()
     {
         ScanForTargets();
+
+        UpdateLockOn();
 
         if (Controls.NextTarget)
             SelectNextActiveTarget();

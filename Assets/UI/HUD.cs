@@ -29,6 +29,8 @@ public class HUD : MonoBehaviour
 
     public GameObject ActiveTargetBracket;
 
+    public GameObject LockOnBracket;
+
     IList<GameObject> TargetBrackets = new List<GameObject>();
 
     Controls Controls;
@@ -117,6 +119,8 @@ public class HUD : MonoBehaviour
         UpdateActiveTargetBracket();
 
         UpdateTargetBrackets();
+
+        UpdateLockOnBracket();
     }
 
     void UpdateActiveTargetBracket()
@@ -153,9 +157,14 @@ public class HUD : MonoBehaviour
             targetBracketEnumerator.Current.SetActive(false);
     }
 
-    Vector3 TargetScreenPosition(Target target)
+    static Vector3 TargetScreenPosition(Target target)
     {
-        var viewportPosition = Camera.main.WorldToViewportPoint(target.transform.position);
+        return ScreenPosition(target.transform.position);
+    }
+
+    static Vector3 ScreenPosition(Vector3 position)
+    {
+        var viewportPosition = Camera.main.WorldToViewportPoint(position);
 
         if (!IsInsideViewport(viewportPosition))
         {
@@ -191,5 +200,20 @@ public class HUD : MonoBehaviour
     static bool IsInsideViewport(Vector3 point)
     {
         return point.x > 0.0f && point.x < 1.0f && point.y > 0.0f && point.y < 1.0f && point.z > 0.0f;
+    }
+
+    void UpdateLockOnBracket()
+    {
+        if (!CombatModel.LockingOn && !CombatModel.LockedOn)
+        {
+            LockOnBracket.SetActive(false);
+            return;
+        }
+
+        var crosshair = ScreenPosition(Crosshair.transform.position);
+        var targetPosition = TargetScreenPosition(CombatModel.ActiveTarget);
+
+        LockOnBracket.transform.position = Vector3.Lerp(crosshair, targetPosition, CombatModel.LockOnTimeElapsed / CombatModel.LockOnTime);
+        LockOnBracket.SetActive(true);
     }
 }
