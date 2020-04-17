@@ -81,6 +81,22 @@ public class @InputActions : IInputActionCollection, IDisposable
                     ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """"
+                },
+                {
+                    ""name"": ""Gun"",
+                    ""type"": ""Button"",
+                    ""id"": ""e07bc031-9077-40d7-ae3b-db147a1a07e5"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""Missile"",
+                    ""type"": ""Button"",
+                    ""id"": ""9eb71a89-67ec-44a5-b01b-96812f738f4f"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """"
                 }
             ],
             ""bindings"": [
@@ -171,6 +187,28 @@ public class @InputActions : IInputActionCollection, IDisposable
                     ""action"": ""Target"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""efb536a4-0128-4ec4-a109-58e52baf65d1"",
+                    ""path"": ""<Gamepad>/buttonSouth"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Gun"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""d4438556-5b0c-4a7b-93e6-248bbfbf97d1"",
+                    ""path"": ""<Gamepad>/buttonEast"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Missile"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -187,6 +225,8 @@ public class @InputActions : IInputActionCollection, IDisposable
         m_Flight_Decelerate = m_Flight.FindAction("Decelerate", throwIfNotFound: true);
         m_Flight_Look = m_Flight.FindAction("Look", throwIfNotFound: true);
         m_Flight_Target = m_Flight.FindAction("Target", throwIfNotFound: true);
+        m_Flight_Gun = m_Flight.FindAction("Gun", throwIfNotFound: true);
+        m_Flight_Missile = m_Flight.FindAction("Missile", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -244,6 +284,8 @@ public class @InputActions : IInputActionCollection, IDisposable
     private readonly InputAction m_Flight_Decelerate;
     private readonly InputAction m_Flight_Look;
     private readonly InputAction m_Flight_Target;
+    private readonly InputAction m_Flight_Gun;
+    private readonly InputAction m_Flight_Missile;
     public struct FlightActions
     {
         private @InputActions m_Wrapper;
@@ -256,6 +298,8 @@ public class @InputActions : IInputActionCollection, IDisposable
         public InputAction @Decelerate => m_Wrapper.m_Flight_Decelerate;
         public InputAction @Look => m_Wrapper.m_Flight_Look;
         public InputAction @Target => m_Wrapper.m_Flight_Target;
+        public InputAction @Gun => m_Wrapper.m_Flight_Gun;
+        public InputAction @Missile => m_Wrapper.m_Flight_Missile;
         public InputActionMap Get() { return m_Wrapper.m_Flight; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -289,6 +333,12 @@ public class @InputActions : IInputActionCollection, IDisposable
                 @Target.started -= m_Wrapper.m_FlightActionsCallbackInterface.OnTarget;
                 @Target.performed -= m_Wrapper.m_FlightActionsCallbackInterface.OnTarget;
                 @Target.canceled -= m_Wrapper.m_FlightActionsCallbackInterface.OnTarget;
+                @Gun.started -= m_Wrapper.m_FlightActionsCallbackInterface.OnGun;
+                @Gun.performed -= m_Wrapper.m_FlightActionsCallbackInterface.OnGun;
+                @Gun.canceled -= m_Wrapper.m_FlightActionsCallbackInterface.OnGun;
+                @Missile.started -= m_Wrapper.m_FlightActionsCallbackInterface.OnMissile;
+                @Missile.performed -= m_Wrapper.m_FlightActionsCallbackInterface.OnMissile;
+                @Missile.canceled -= m_Wrapper.m_FlightActionsCallbackInterface.OnMissile;
             }
             m_Wrapper.m_FlightActionsCallbackInterface = instance;
             if (instance != null)
@@ -317,6 +367,12 @@ public class @InputActions : IInputActionCollection, IDisposable
                 @Target.started += instance.OnTarget;
                 @Target.performed += instance.OnTarget;
                 @Target.canceled += instance.OnTarget;
+                @Gun.started += instance.OnGun;
+                @Gun.performed += instance.OnGun;
+                @Gun.canceled += instance.OnGun;
+                @Missile.started += instance.OnMissile;
+                @Missile.performed += instance.OnMissile;
+                @Missile.canceled += instance.OnMissile;
             }
         }
     }
@@ -331,5 +387,7 @@ public class @InputActions : IInputActionCollection, IDisposable
         void OnDecelerate(InputAction.CallbackContext context);
         void OnLook(InputAction.CallbackContext context);
         void OnTarget(InputAction.CallbackContext context);
+        void OnGun(InputAction.CallbackContext context);
+        void OnMissile(InputAction.CallbackContext context);
     }
 }

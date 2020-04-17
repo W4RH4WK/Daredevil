@@ -72,6 +72,22 @@ public class Controls : MonoBehaviour
 
     //////////////////////////////////////////////////////////////////////////
 
+    public bool Gun { get; private set; }
+
+    public bool Missile { get; private set; }
+
+    void UpdateWeapons()
+    {
+        // reset
+        Missile = false;
+
+        Gun = InputActions.Flight.Gun.ReadValue<float>() > 0.9f;
+
+        Missile = InputActions.Flight.Missile.ReadValue<float>() > 0.9f;
+    }
+
+    //////////////////////////////////////////////////////////////////////////
+
     static float HoldTime = 0.3f;
 
     InputActions InputActions;
@@ -86,5 +102,6 @@ public class Controls : MonoBehaviour
         UpdateMovement();
         UpdateLook();
         UpdateTargetting();
+        UpdateWeapons();
     }
 }

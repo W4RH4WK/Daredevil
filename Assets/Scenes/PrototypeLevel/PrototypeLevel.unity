@@ -147,14 +147,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 119814187}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 430, y: 135, z: 220}
+  m_LocalRotation: {x: -0, y: 0.70710576, z: -0, w: 0.7071079}
+  m_LocalPosition: {x: -204.19896, y: 135, z: 741.901}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 723317268}
   m_Father: {fileID: 0}
   m_RootOrder: 3
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 90.00001, z: 0}
 --- !u!114 &119814189
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -182,6 +182,12 @@ MonoBehaviour:
   TargetRange: 500
   LockOnAngle: 25
   LockOnTime: 0.5
+  BulletPrefab: {fileID: 4277768823688768594, guid: b5270880af2dc9441931d46db92a04f8,
+    type: 3}
+  GunFireRate: 5
+  MissilePrefab: {fileID: 4277768823688768594, guid: 7dcbd20310f80924995ce548de2f1e16,
+    type: 3}
+  MissileFireRate: 5
 --- !u!114 &119814191
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -498,7 +504,7 @@ PrefabInstance:
     - target: {fileID: 3853717675981570814, guid: e90e4b1a0d79f134dbcc4383b9a6a3c0,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 119.3
+      value: 139.45
       objectReference: {fileID: 0}
     - target: {fileID: 3853717675981570814, guid: e90e4b1a0d79f134dbcc4383b9a6a3c0,
         type: 3}

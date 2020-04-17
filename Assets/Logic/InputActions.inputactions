@@ -1,5 +1,5 @@
 {
-    "name": "Controls",
+    "name": "InputActions",
     "maps": [
         {
             "name": "Flight",
@@ -65,6 +65,22 @@
                     "name": "Target",
                     "type": "Button",
                     "id": "210f2dfa-6d50-4e2f-b923-9ff8635b7d53",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "Gun",
+                    "type": "Button",
+                    "id": "e07bc031-9077-40d7-ae3b-db147a1a07e5",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "Missile",
+                    "type": "Button",
+                    "id": "9eb71a89-67ec-44a5-b01b-96812f738f4f",
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": ""
@@ -156,6 +172,28 @@
                     "processors": "",
                     "groups": "",
                     "action": "Target",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "efb536a4-0128-4ec4-a109-58e52baf65d1",
+                    "path": "<Gamepad>/buttonSouth",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Gun",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "d4438556-5b0c-4a7b-93e6-248bbfbf97d1",
+                    "path": "<Gamepad>/buttonEast",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Missile",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

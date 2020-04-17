@@ -144,7 +144,7 @@ public class FlightModel : MonoBehaviour
 
     void Update()
     {
-        UpdateStalling();
+        //UpdateStalling();
 
         if (!Stalling)
         {
