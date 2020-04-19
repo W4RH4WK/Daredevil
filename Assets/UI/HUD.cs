@@ -23,7 +23,7 @@ public class HUD : MonoBehaviour
 
     public GameObject VelocityVector;
 
-    public float CrosshairOffset = 10.0f;
+    public float VelocityVectorOffset = 10.0f;
 
     public GameObject TargetBracketPrefab;
 
@@ -104,15 +104,11 @@ public class HUD : MonoBehaviour
             Compass.material.SetTextureOffset("_MainTex", new Vector2(offset, 0.0f));
         }
 
-        if (Crosshair)
-        {
-            Crosshair.transform.position = FlightModel.transform.rotation * (CrosshairOffset * Vector3.forward) + FlightModel.transform.position;
-            Crosshair.transform.rotation = Camera.main.transform.rotation;
-        }
+        UpdateCrosshair();
 
         if (VelocityVector)
         {
-            VelocityVector.transform.position = /*FlightModel.transform.rotation **/ (CrosshairOffset * FlightModel.Velocity.normalized) + FlightModel.transform.position;
+            VelocityVector.transform.position = (VelocityVectorOffset * FlightModel.Velocity.normalized) + FlightModel.transform.position;
             VelocityVector.transform.rotation = Camera.main.transform.rotation;
         }
 
@@ -121,6 +117,36 @@ public class HUD : MonoBehaviour
         UpdateTargetBrackets();
 
         UpdateLockOnBracket();
+    }
+
+    void UpdateCrosshair()
+    {
+        if (!Crosshair)
+            return;
+
+        if (!CombatModel.ActiveTarget)
+            goto Disable;
+
+        var cameraToTarget = CombatModel.ActiveTarget.transform.position - Camera.main.transform.position;
+        if (Vector3.Angle(FlightModel.transform.forward, cameraToTarget) > 18.0f)
+            goto Disable;
+
+        var targetPosition = CombatModel.ActiveTarget.transform.position;
+        var targetPlane = (targetPosition - Camera.main.transform.position).normalized;
+        var pointOnTargetPlane = LinePlaneIntersection(FlightModel.transform.position, FlightModel.transform.forward, targetPlane, targetPosition);
+        if (!pointOnTargetPlane.HasValue)
+            goto Disable;
+
+        var viewportPosition = Camera.main.WorldToViewportPoint(pointOnTargetPlane.Value);
+        if (viewportPosition.z < 0.0f)
+            goto Disable;
+
+        Crosshair.transform.position = Camera.main.ViewportToScreenPoint(viewportPosition);
+        Crosshair.SetActive(true);
+        return;
+
+    Disable:
+        Crosshair.SetActive(false);
     }
 
     void UpdateActiveTargetBracket()
@@ -155,6 +181,24 @@ public class HUD : MonoBehaviour
 
         while (targetBracketEnumerator.MoveNext())
             targetBracketEnumerator.Current.SetActive(false);
+    }
+
+    void UpdateLockOnBracket()
+    {
+        if (!CombatModel.LockingOn && !CombatModel.LockedOn)
+        {
+            LockOnBracket.SetActive(false);
+            return;
+        }
+
+        var origin = Camera.main.ViewportToScreenPoint(new Vector3(0.5f, 0.5f));
+        if (Crosshair)
+            origin = Crosshair.transform.position;
+
+        var targetPosition = TargetScreenPosition(CombatModel.ActiveTarget);
+
+        LockOnBracket.transform.position = Vector3.Lerp(origin, targetPosition, CombatModel.LockOnTimeElapsed / CombatModel.LockOnTime);
+        LockOnBracket.SetActive(true);
     }
 
     static Vector3 TargetScreenPosition(Target target)
@@ -202,18 +246,13 @@ public class HUD : MonoBehaviour
         return point.x > 0.0f && point.x < 1.0f && point.y > 0.0f && point.y < 1.0f && point.z > 0.0f;
     }
 
-    void UpdateLockOnBracket()
+    static Vector3? LinePlaneIntersection(Vector3 pointOnLine, Vector3 line, Vector3 planeNormal, Vector3 pointOnPlane)
     {
-        if (!CombatModel.LockingOn && !CombatModel.LockedOn)
-        {
-            LockOnBracket.SetActive(false);
-            return;
-        }
+        var denominator = Vector3.Dot(line, planeNormal);
+        if (denominator == 0.0f)
+            return null;
 
-        var crosshair = ScreenPosition(Crosshair.transform.position);
-        var targetPosition = TargetScreenPosition(CombatModel.ActiveTarget);
-
-        LockOnBracket.transform.position = Vector3.Lerp(crosshair, targetPosition, CombatModel.LockOnTimeElapsed / CombatModel.LockOnTime);
-        LockOnBracket.SetActive(true);
+        var distance = Vector3.Dot((pointOnPlane - pointOnLine), planeNormal) / denominator;
+        return distance * line.normalized + pointOnLine;
     }
 }
