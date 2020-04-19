@@ -7,7 +7,7 @@ public class Missile : MonoBehaviour
 
     public float Speed = 300.0f;
 
-    public float Mobility = 10.0f;
+    public float Mobility = 28.0f;
 
     public Target Target;
 
