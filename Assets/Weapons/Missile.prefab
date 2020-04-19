@@ -49,9 +49,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Lifetime: 20
-  Speed: 180
+  Speed: 120
   Mobility: 40
   Target: {fileID: 0}
+  ExplosionPrefab: {fileID: 7996129905222858896, guid: 5ffe04275b10a3447aced659fb7876cf,
+    type: 3}
 --- !u!33 &1661122346649506889
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -110,8 +112,8 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 2, y: 2, z: 10}
-  m_Center: {x: 0, y: 0, z: -2}
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!54 &1999795755652808104
 Rigidbody:
   m_ObjectHideFlags: 0

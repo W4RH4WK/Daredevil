@@ -28,7 +28,7 @@ public class FlightModelParameters : MonoBehaviour
 
     [Header("Speed")]
 
-    public float VelocityVectorResponseRate = 5.0f;
+    public float VelocityVectorResponseRate = 3.7f;
 
     public float BaseThrust = 32.0f;
 

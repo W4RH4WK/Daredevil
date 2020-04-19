@@ -16,7 +16,12 @@ public class Bullet : MonoBehaviour
             Destroy(gameObject);
     }
 
-    void OnCollisionEnter(Collision collision)
+    void OnTriggerEnter()
+    {
+        Destroy(gameObject);
+    }
+
+    void OnCollisionEnter()
     {
         Destroy(gameObject);
     }

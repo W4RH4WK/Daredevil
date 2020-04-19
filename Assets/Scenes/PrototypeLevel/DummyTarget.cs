@@ -4,7 +4,7 @@ public class DummyTarget : MonoBehaviour
 {
     public GameObject ExplosionPrefab;
 
-    void OnCollisionEnter(Collision collision)
+    void OnTriggerEnter()
     {
         Instantiate(ExplosionPrefab, transform.position, Quaternion.identity);
         Destroy(gameObject);

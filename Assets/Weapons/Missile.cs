@@ -11,6 +11,8 @@ public class Missile : MonoBehaviour
 
     public Target Target;
 
+    public GameObject ExplosionPrefab;
+
     Rigidbody Rigidbody;
 
     void Awake()
@@ -39,20 +41,19 @@ public class Missile : MonoBehaviour
             var newRotation = Quaternion.LookRotation(toTarget, transform.up);
             transform.rotation = Quaternion.RotateTowards(transform.rotation, newRotation, Mobility * Time.deltaTime);
 
-            //var newRotation = transform.rotation * Quaternion.FromToRotation(transform.forward, toTarget);
-
-            //transform.rotation = Quaternion.RotateTowards(transform.rotation, newRotation, Mobility * Time.deltaTime);
-            //transform.rotation = newRotation;
-
-            //transform.rotation *= Quaternion.RotateTowards(transform.rotation, transform.rotation * newRotation, 1.0f * Time.deltaTime);
-            //transform.rotation *= Quaternion.Lerp(Quaternion.identity, newRotation, 0.5f);
-
             Rigidbody.velocity = transform.rotation * new Vector3(0.0f, 0.0f, Speed);
         }
     }
 
+    void OnTriggerEnter(Collider other)
+    {
+        Instantiate(ExplosionPrefab, transform.position, transform.rotation);
+        Destroy(gameObject);
+    }
+
     void OnCollisionEnter(Collision collision)
     {
+        Instantiate(ExplosionPrefab, transform.position, transform.rotation);
         Destroy(gameObject);
     }
 }

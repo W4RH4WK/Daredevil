@@ -172,6 +172,8 @@ public class CombatModel : MonoBehaviour
 
     //////////////////////////////////////////////////////////////////////////
 
+    public GameObject ExplosionPrefab;
+
     Controls Controls;
 
     void Awake()
@@ -190,5 +192,11 @@ public class CombatModel : MonoBehaviour
             SelectNextActiveTarget();
 
         UpdateWeapons();
+    }
+
+    void OnTriggerEnter()
+    {
+        Instantiate(ExplosionPrefab, transform.position, transform.rotation);
+        Destroy(gameObject);
     }
 }

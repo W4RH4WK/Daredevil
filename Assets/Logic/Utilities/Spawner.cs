@@ -2,24 +2,28 @@ using UnityEngine;
 
 public class Spawner : MonoBehaviour
 {
-    public GameObject GameObject;
+    public GameObject Prefab;
 
-    public Vector3 Count = Vector3.one;
+    public float Delay = 2.0f;
 
-    public Vector3 Spacing = Vector3.one;
+    GameObject Current;
 
-    void Start()
+    float? Timer = null;
+
+    void Update()
     {
-        for (int z = 0; z < Count.z; z++)
+        if (Current)
+            return;
+
+        if (!Timer.HasValue)
+            Timer = Delay;
+
+        Timer -= Time.deltaTime;
+
+        if (Timer <= 0.0f)
         {
-            for (int y = 0; y < Count.y; y++)
-            {
-                for (int x = 0; x < Count.x; x++)
-                {
-                    var instance = Instantiate(GameObject, transform);
-                    instance.transform.localPosition = Vector3.Scale(Spacing, new Vector3(x, y, z));
-                }
-            }
+            Current = Instantiate(Prefab, transform);
+            Timer = null;
         }
     }
 }

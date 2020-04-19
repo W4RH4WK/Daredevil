@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8543780431941375120}
   - component: {fileID: 5539796520862002447}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: FcsBackLeft
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -59,7 +59,7 @@ GameObject:
   - component: {fileID: 6369785489854668401}
   - component: {fileID: 1984933485267644700}
   - component: {fileID: 1484085066716174709}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Model
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -137,7 +137,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6984586421933065483}
   - component: {fileID: 4426712082471303264}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Trail (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -266,7 +266,7 @@ GameObject:
   - component: {fileID: 6711512487091382355}
   - component: {fileID: 4905865637265795917}
   - component: {fileID: 9003841433457344873}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Model
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -344,7 +344,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7082637648832704212}
   - component: {fileID: 3273637257700293102}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: FcsBackRight
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -393,7 +393,7 @@ GameObject:
   - component: {fileID: 4967019647347109531}
   - component: {fileID: 176342666756916570}
   - component: {fileID: 3288549121690485593}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Model
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -483,7 +483,7 @@ GameObject:
   - component: {fileID: 643837212770115786}
   - component: {fileID: 6644192238816365784}
   - component: {fileID: 8423870469184665257}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Model
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -562,7 +562,7 @@ GameObject:
   - component: {fileID: 2548779422407159182}
   - component: {fileID: 5226514553075776120}
   - component: {fileID: 3337833266715647730}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Model
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -640,7 +640,7 @@ GameObject:
   m_Component:
   - component: {fileID: 844321415638920516}
   - component: {fileID: 1128327468355004808}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Trail (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -768,7 +768,8 @@ GameObject:
   m_Component:
   - component: {fileID: 5516187655985375483}
   - component: {fileID: 244911343647989781}
-  m_Layer: 0
+  - component: {fileID: 3455687266132319715}
+  m_Layer: 9
   m_Name: X1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -812,7 +813,7 @@ MonoBehaviour:
   StrafePitchYawRollRateModifier: 1.8
   HighGTurnPitchRateModifier: 2
   HighGTurnDecelerationModifier: 1.5
-  VelocityVectorResponseRate: 5
+  VelocityVectorResponseRate: 3.7
   BaseThrust: 32
   ThrustResponseRate: 0.45
   Mobility: 1.5
@@ -828,6 +829,19 @@ MonoBehaviour:
   StallingThrustCutFactor: 0.5
   BankingDriftRate: 2
   BankingLiftLossRate: 2
+--- !u!65 &3455687266132319715
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3262906496652334119}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 4.618411, y: 1.0729799, z: 4.036748}
+  m_Center: {x: 0, y: -0.06487036, z: -0.70749235}
 --- !u!1 &3371529776349582560
 GameObject:
   m_ObjectHideFlags: 0
@@ -838,7 +852,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8689014212500313389}
   - component: {fileID: 6957313548346046765}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: FcsRightTop
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -887,7 +901,7 @@ GameObject:
   - component: {fileID: 6260283237705811491}
   - component: {fileID: 1642103135675453143}
   - component: {fileID: 6286774329606371243}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Model
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -965,7 +979,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7358626328553765929}
   - component: {fileID: 9119127480714836545}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: FcsLeftTop
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1013,7 +1027,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2372003584085197205}
   - component: {fileID: 5900569526898221911}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Trail (3)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1142,7 +1156,7 @@ GameObject:
   - component: {fileID: 6690865677655126387}
   - component: {fileID: 8246281226841358970}
   - component: {fileID: 4818495674991016520}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Model
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1220,7 +1234,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6027837989993166760}
   - component: {fileID: 180625554445622194}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: FcsBackTop
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1268,7 +1282,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1785819331731365428}
   - component: {fileID: 253201625271344639}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: FcsRightBottom
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1316,7 +1330,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6924753247019559547}
   - component: {fileID: 5340370602865750340}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Trail (4)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1444,7 +1458,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3907113895076681578}
   - component: {fileID: 1540455074216690477}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: FcsLeftBottom
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1493,7 +1507,7 @@ GameObject:
   - component: {fileID: 5201972309174788778}
   - component: {fileID: 6760046820955846042}
   - component: {fileID: 3753519735410038549}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Model
   m_TagString: Untagged
   m_Icon: {fileID: 0}
