@@ -176,7 +176,7 @@ public class CombatModel : MonoBehaviour
 
     Controls Controls;
 
-    void Awake()
+    void Start()
     {
         Controls = GetComponent<Controls>();
         Assert.IsNotNull(Controls);

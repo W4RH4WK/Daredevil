@@ -130,7 +130,7 @@ public class FlightModel : MonoBehaviour
 
     public FlightModelParameters FlightModelParams { get; private set; }
 
-    void Awake()
+    void Start()
     {
         Controls = GetComponent<Controls>();
         Assert.IsNotNull(Controls);

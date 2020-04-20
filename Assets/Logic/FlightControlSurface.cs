@@ -22,9 +22,12 @@ public class FlightControlSurface : MonoBehaviour
 
     void Awake()
     {
-        Controls = GetComponentInParent<Controls>();
-
         InitialRotation = transform.localRotation;
+    }
+
+    void Start()
+    {
+        Controls = GetComponentInParent<Controls>();
     }
 
     void Update()

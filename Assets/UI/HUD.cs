@@ -39,24 +39,22 @@ public class HUD : MonoBehaviour
 
     CombatModel CombatModel;
 
-    void Awake()
+    void OnEnable()
     {
         Controls = FindObjectOfType<Controls>();
-        Assert.IsNotNull(Controls);
 
         FlightModel = FindObjectOfType<FlightModel>();
-        Assert.IsNotNull(FlightModel);
 
         CombatModel = FindObjectOfType<CombatModel>();
-        Assert.IsNotNull(CombatModel);
+    }
 
-        // Materials are shared. Modifying them during runtime causes them to
+    void Start()
+    {
+        // UI materials are shared. Modifying them during runtime causes them to
         // change permanently. We therefore clone them before modifying any
         // parameters.
-        {
-            if (Compass)
-                Compass.material = new Material(Compass.material);
-        }
+        if (Compass)
+            Compass.material = new Material(Compass.material);
 
         // Use a fixed number of target brackets, only enabling the ones we need.
         for (var i = 0; i < 32; i++)
@@ -70,6 +68,12 @@ public class HUD : MonoBehaviour
 
     void Update()
     {
+        if (!Controls || !FlightModel || !CombatModel)
+        {
+            Destroy(gameObject);
+            return;
+        }
+
         if (Speed)
             Speed.text = $"{FlightModel.Speed * 10.0f,4:000}|";
 

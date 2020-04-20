@@ -10,6 +10,11 @@ public class Spawner : MonoBehaviour
 
     float? Timer = null;
 
+    void Start()
+    {
+        Current = Instantiate(Prefab, transform);
+    }
+
     void Update()
     {
         if (Current)

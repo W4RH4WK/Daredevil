@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: de6175bd54e83d24bbc4dadb1fd60b17
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - CameraPrefab: {instanceID: 0}
+  - HudPrefab: {instanceID: 0}
+  - PlayerPrefab: {instanceID: 0}
+  - Plane: {instanceID: 0}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

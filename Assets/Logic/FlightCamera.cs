@@ -24,7 +24,7 @@ public class FlightCamera : MonoBehaviour
 
     //////////////////////////////////////////////////////////////////////////
 
-    Quaternion LookRotation;
+    Quaternion LookRotation = Quaternion.identity;
 
     void UpdateLook()
     {
@@ -68,28 +68,36 @@ public class FlightCamera : MonoBehaviour
 
     CombatModel CombatModel;
 
-    Quaternion FlightRotation;
+    Quaternion FlightRotation = Quaternion.identity;
 
-    void Awake()
+    void OnEnable()
+    {
+        Controls = FindObjectOfType<Controls>();
+
+        FlightModel = FindObjectOfType<FlightModel>();
+
+        CombatModel = FindObjectOfType<CombatModel>();
+    }
+
+    void Start()
     {
         Camera = GetComponent<Camera>();
         Assert.IsNotNull(Camera);
 
-        Controls = FindObjectOfType<Controls>();
-        Assert.IsNotNull(Controls);
-
-        FlightModel = FindObjectOfType<FlightModel>();
-        Assert.IsNotNull(FlightModel);
-
-        CombatModel = FindObjectOfType<CombatModel>();
-        Assert.IsNotNull(CombatModel);
-
         BaseFov = Camera.fieldOfView;
-        FlightRotation = FlightModel.transform.rotation;
+
+        if (FlightModel)
+            FlightRotation = FlightModel.transform.rotation;
     }
 
     void Update()
     {
+        if (!Controls || !FlightModel || !CombatModel)
+        {
+            enabled = false;
+            return;
+        }
+
         UpdateLook();
 
         UpdateFov();
@@ -109,9 +117,9 @@ public class FlightCamera : MonoBehaviour
 
         FlightRotation = Quaternion.Slerp(FlightRotation, newFlightRotation, rate * Time.deltaTime);
 
-        var SpeedOffset = SpeedFactor * (2.0f * FlightModel.Speed / FlightModel.FlightModelParams.MaxSpeed - 1.0f) * Vector3.back;
+        var speedOffset = SpeedFactor * (2.0f * FlightModel.Speed / FlightModel.FlightModelParams.MaxSpeed - 1.0f) * Vector3.back;
 
-        transform.position = FlightRotation * LookRotation * (Offset + SpeedOffset) + FlightModel.transform.position;
+        transform.position = FlightRotation * LookRotation * (Offset + speedOffset) + FlightModel.transform.position;
         transform.rotation = FlightRotation * LookRotation;
     }
 }
