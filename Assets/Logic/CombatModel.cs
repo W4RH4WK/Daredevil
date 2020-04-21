@@ -127,47 +127,30 @@ public class CombatModel : MonoBehaviour
 
     //////////////////////////////////////////////////////////////////////////
 
-    public GameObject BulletPrefab;
+    Gun[] Guns;
 
-    public float GunFireRate = 5.0f;
-
-    float GunCooldown = 0.0f;
-
-    void FireBullet()
-    {
-        var pos = 10.0f * transform.forward + transform.position;
-        Instantiate(BulletPrefab, pos, transform.rotation);
-
-        GunCooldown = 1.0f / GunFireRate;
-    }
-
-    public GameObject MissilePrefab;
-
-    public float MissileFireRate = 5.0f;
-
-    float MissileCooldown = 0.0f;
-
-    void FireMissile()
-    {
-        var pos = 10.0f * transform.forward + transform.position;
-        var missile = Instantiate(MissilePrefab, pos, transform.rotation);
-
-        if (LockedOn)
-            missile.GetComponent<Missile>().Target = ActiveTarget;
-
-        MissileCooldown = 1.0f / MissileFireRate;
-    }
+    MissileLauncher[] MissileLaunchers;
 
     void UpdateWeapons()
     {
-        GunCooldown -= Time.deltaTime;
-        MissileCooldown -= Time.deltaTime;
+        if (Controls.Gun)
+        {
+            foreach (var gun in Guns)
+                gun.Fire();
+        }
 
-        if (Controls.Gun && GunCooldown <= 0.0f)
-            FireBullet();
-
-        if (Controls.Missile && MissileCooldown <= 0.0f)
-            FireMissile();
+        if (Controls.Missile)
+        {
+            foreach (var launcher in MissileLaunchers)
+            {
+                var missile = launcher.Fire();
+                if (missile)
+                {
+                    missile.GetComponent<Missile>().Target = ActiveTarget;
+                    break;
+                }
+            }
+        }
     }
 
     //////////////////////////////////////////////////////////////////////////
@@ -180,6 +163,10 @@ public class CombatModel : MonoBehaviour
     {
         Controls = GetComponent<Controls>();
         Assert.IsNotNull(Controls);
+
+        Guns = GetComponentsInChildren<Gun>();
+
+        MissileLaunchers = GetComponentsInChildren<MissileLauncher>();
     }
 
     void Update()

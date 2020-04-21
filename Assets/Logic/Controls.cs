@@ -76,14 +76,15 @@ public class Controls : MonoBehaviour
 
     public bool Missile { get; private set; }
 
+    bool MissileDown = false;
+
     void UpdateWeapons()
     {
-        // reset
-        Missile = false;
-
         Gun = InputActions.Flight.Gun.ReadValue<float>() > 0.9f;
 
-        Missile = InputActions.Flight.Missile.ReadValue<float>() > 0.9f;
+        var missileInput = InputActions.Flight.Missile.ReadValue<float>() > 0.9f;
+        Missile = missileInput && !MissileDown;
+        MissileDown = missileInput;
     }
 
     //////////////////////////////////////////////////////////////////////////
