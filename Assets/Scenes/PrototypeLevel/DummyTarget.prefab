@@ -91,7 +91,7 @@ GameObject:
   - component: {fileID: 4841390100225305834}
   - component: {fileID: 8970371374604827408}
   - component: {fileID: 3853717675981570812}
-  - component: {fileID: -7152687871672312336}
+  - component: {fileID: -1154632291933268841}
   - component: {fileID: 2269377748394256401}
   - component: {fileID: 9218931811789057221}
   m_Layer: 9
@@ -128,10 +128,10 @@ Rigidbody:
   m_Drag: 0
   m_AngularDrag: 0.05
   m_UseGravity: 0
-  m_IsKinematic: 1
+  m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 0
-  m_CollisionDetection: 3
+  m_CollisionDetection: 1
 --- !u!65 &8970371374604827408
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -157,7 +157,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e28d4a7a5d6601144a7f7e4fb7c2f407, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &-7152687871672312336
+--- !u!114 &-1154632291933268841
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -166,9 +166,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 3853717675981570809}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 266aa1d9649733d43bea41580431037a, type: 3}
+  m_Script: {fileID: 11500000, guid: e41d47d1af5fcee478a7dea7107d5e5d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  HealthLeft: 100
 --- !u!114 &2269377748394256401
 MonoBehaviour:
   m_ObjectHideFlags: 0

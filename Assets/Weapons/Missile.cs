@@ -3,6 +3,8 @@ using UnityEngine.Assertions;
 
 public class Missile : MonoBehaviour
 {
+    public int Damage = 75;
+
     public float Speed = 300.0f;
 
     public float Mobility = 28.0f;
@@ -32,5 +34,13 @@ public class Missile : MonoBehaviour
 
             Rigidbody.velocity = transform.rotation * new Vector3(0.0f, 0.0f, Speed);
         }
+    }
+
+
+    void OnCollisionEnter(Collision collision)
+    {
+        var otherHealth = collision.gameObject.GetComponent<Health>();
+        if (otherHealth)
+            otherHealth.ReceiveDamage(Damage);
     }
 }
