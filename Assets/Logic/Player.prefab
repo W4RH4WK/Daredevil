@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 8635141839908196035}
   - component: {fileID: 8635141839908196033}
   - component: {fileID: 8635141839908196034}
-  - component: {fileID: 1060340628420346111}
+  - component: {fileID: 5910433573815533445}
   - component: {fileID: -397737029326382114}
   m_Layer: 0
   m_Name: Player
@@ -91,7 +91,7 @@ MonoBehaviour:
   TargetRange: 500
   LockOnAngle: 25
   LockOnTime: 0.5
---- !u!114 &1060340628420346111
+--- !u!114 &5910433573815533445
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -100,11 +100,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 8635141839908196039}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 266aa1d9649733d43bea41580431037a, type: 3}
+  m_Script: {fileID: 11500000, guid: e41d47d1af5fcee478a7dea7107d5e5d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  CollisionEnter: 1
-  TriggerEnter: 1
+  HealthLeft: 100
 --- !u!114 &-397737029326382114
 MonoBehaviour:
   m_ObjectHideFlags: 0

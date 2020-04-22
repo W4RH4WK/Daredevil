@@ -16,8 +16,8 @@ GameObject:
   - component: {fileID: 3601909082468949203}
   - component: {fileID: 5537199843300855665}
   - component: {fileID: -8535224767186005287}
-  - component: {fileID: 7928226978206148427}
   - component: {fileID: 481536424272629202}
+  - component: {fileID: 7928226978206148427}
   - component: {fileID: 3147042229033769333}
   m_Layer: 10
   m_Name: Missile
@@ -225,7 +225,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d66c37aebf11828419afb5ac9654e53b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Lifetime: 20
+  Damage: 75
   Speed: 300
   Mobility: 28
   Target: {fileID: 0}
@@ -242,6 +242,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   SecondsLeft: 20
+--- !u!114 &481536424272629202
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4277768823688768594}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 266aa1d9649733d43bea41580431037a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CollisionEnter: 1
+  TriggerEnter: 1
 --- !u!114 &7928226978206148427
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -255,18 +269,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Prefab: {fileID: 7996129905222858896, guid: 5ffe04275b10a3447aced659fb7876cf, type: 3}
---- !u!114 &481536424272629202
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4277768823688768594}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 266aa1d9649733d43bea41580431037a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &3147042229033769333
 MonoBehaviour:
   m_ObjectHideFlags: 0

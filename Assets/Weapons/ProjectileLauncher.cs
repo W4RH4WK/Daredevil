@@ -21,7 +21,17 @@ public class ProjectileLauncher : MonoBehaviour
             Random.Range(-Spread.z, Spread.z)
         );
 
-        return Instantiate(ProjectilePrefab, transform.position, accuracy * transform.rotation);
+        var projectile = Instantiate(ProjectilePrefab, transform.position, accuracy * transform.rotation);
+
+        // prevent self collision
+        {
+            var ownCollider = GetComponentInParent<Collider>();
+            var projectileCollider = projectile.GetComponent<Collider>();
+            if (ownCollider && projectileCollider)
+                Physics.IgnoreCollision(ownCollider, projectileCollider);
+        }
+
+        return projectile;
     }
 
     float Cooldown = 0.0f;
