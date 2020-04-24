@@ -136,7 +136,14 @@ public class CombatModel : MonoBehaviour
         if (Controls.Gun)
         {
             foreach (var gun in Guns)
-                gun.Fire();
+            {
+                var bullet = gun.Fire();
+                if (bullet)
+                {
+                    var bulletComponent = bullet.GetComponent<Bullet>();
+                    bulletComponent.OnHit = RegisterHit;
+                }
+            }
         }
 
         if (Controls.Missile)
@@ -146,7 +153,10 @@ public class CombatModel : MonoBehaviour
                 var missile = launcher.Fire();
                 if (missile)
                 {
-                    missile.GetComponent<Missile>().Target = ActiveTarget;
+                    var missileComponent = missile.GetComponent<Missile>();
+                    missileComponent.Target = ActiveTarget;
+                    missileComponent.OnHit = RegisterHit;
+                    missileComponent.OnMiss = RegisterMiss;
                     break;
                 }
             }
@@ -160,6 +170,14 @@ public class CombatModel : MonoBehaviour
     public void RegisterHit() => LastHitFrameCount = Time.frameCount;
 
     int LastHitFrameCount = 0;
+
+    //////////////////////////////////////////////////////////////////////////
+
+    public bool MissRegistered => LastMissFrameCount == Time.frameCount;
+
+    public void RegisterMiss() => LastMissFrameCount = Time.frameCount;
+
+    int LastMissFrameCount = 0;
 
     //////////////////////////////////////////////////////////////////////////
 

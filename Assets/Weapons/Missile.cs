@@ -14,6 +14,8 @@ public class Missile : MonoBehaviour
 
     public Action OnHit;
 
+    public Action OnMiss;
+
     Rigidbody Rigidbody;
 
     void Awake()
@@ -47,6 +49,10 @@ public class Missile : MonoBehaviour
         {
             otherHealth.ReceiveDamage(Damage);
             OnHit();
+        }
+        else if (Target)
+        {
+            OnMiss();
         }
     }
 }

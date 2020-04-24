@@ -23,6 +23,8 @@ public class HUD : MonoBehaviour
 
     public Animation HitMarker;
 
+    public Animation Miss;
+
     public GameObject VelocityVector;
 
     public float VelocityVectorOffset = 10.0f;
@@ -114,6 +116,8 @@ public class HUD : MonoBehaviour
 
         UpdateHitMarker();
 
+        UpdateMiss();
+
         if (VelocityVector)
         {
             VelocityVector.transform.position = (VelocityVectorOffset * FlightModel.Velocity.normalized) + FlightModel.transform.position;
@@ -164,6 +168,15 @@ public class HUD : MonoBehaviour
 
         HitMarker.Stop();
         HitMarker.Play();
+    }
+
+    void UpdateMiss()
+    {
+        if (!Miss || !CombatModel.MissRegistered)
+            return;
+
+        Miss.Stop();
+        Miss.Play();
     }
 
     void UpdateActiveTargetBracket()
