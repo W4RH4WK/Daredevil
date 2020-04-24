@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.Assertions;
 
@@ -10,6 +11,8 @@ public class Missile : MonoBehaviour
     public float Mobility = 28.0f;
 
     public Target Target;
+
+    public Action OnHit;
 
     Rigidbody Rigidbody;
 
@@ -41,6 +44,9 @@ public class Missile : MonoBehaviour
     {
         var otherHealth = collision.gameObject.GetComponent<Health>();
         if (otherHealth)
+        {
             otherHealth.ReceiveDamage(Damage);
+            OnHit();
+        }
     }
 }

@@ -21,6 +21,8 @@ public class HUD : MonoBehaviour
 
     public GameObject Crosshair;
 
+    public Animation HitMarker;
+
     public GameObject VelocityVector;
 
     public float VelocityVectorOffset = 10.0f;
@@ -110,6 +112,8 @@ public class HUD : MonoBehaviour
 
         UpdateCrosshair();
 
+        UpdateHitMarker();
+
         if (VelocityVector)
         {
             VelocityVector.transform.position = (VelocityVectorOffset * FlightModel.Velocity.normalized) + FlightModel.transform.position;
@@ -151,6 +155,15 @@ public class HUD : MonoBehaviour
 
     Disable:
         Crosshair.SetActive(false);
+    }
+
+    void UpdateHitMarker()
+    {
+        if (!HitMarker || !CombatModel.HitRegistered)
+            return;
+
+        HitMarker.Stop();
+        HitMarker.Play();
     }
 
     void UpdateActiveTargetBracket()

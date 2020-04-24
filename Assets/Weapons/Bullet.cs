@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class Bullet : MonoBehaviour
@@ -5,6 +6,8 @@ public class Bullet : MonoBehaviour
     public int Damage = 20;
 
     public float Speed = 150.0f;
+
+    public Action OnHit;
 
     void Start()
     {
@@ -15,6 +18,9 @@ public class Bullet : MonoBehaviour
     {
         var otherHealth = collision.gameObject.GetComponent<Health>();
         if (otherHealth)
+        {
             otherHealth.ReceiveDamage(Damage);
+            OnHit();
+        }
     }
 }

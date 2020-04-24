@@ -155,6 +155,14 @@ public class CombatModel : MonoBehaviour
 
     //////////////////////////////////////////////////////////////////////////
 
+    public bool HitRegistered => LastHitFrameCount == Time.frameCount;
+
+    public void RegisterHit() => LastHitFrameCount = Time.frameCount;
+
+    int LastHitFrameCount = 0;
+
+    //////////////////////////////////////////////////////////////////////////
+
     Controls Controls;
 
     void Start()
