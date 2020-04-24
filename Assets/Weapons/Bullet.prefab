@@ -126,8 +126,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 855d1d501641a7e4ba88a84345ede056, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Damage: 5
   Speed: 300
-  Lifetime: 3
 --- !u!114 &2563605602756173765
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -153,6 +153,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 266aa1d9649733d43bea41580431037a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  CollisionEnter: 1
+  TriggerEnter: 1
 --- !u!114 &-2896683632467331274
 MonoBehaviour:
   m_ObjectHideFlags: 0
