@@ -1,6 +1,4 @@
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Assertions;
 using UnityEngine.UI;
 
 public class HUD : MonoBehaviour
@@ -35,8 +33,6 @@ public class HUD : MonoBehaviour
 
     public GameObject LockOnBracket;
 
-    IList<GameObject> TargetBrackets = new List<GameObject>();
-
     Controls Controls;
 
     FlightModel FlightModel;
@@ -60,14 +56,25 @@ public class HUD : MonoBehaviour
         if (Compass)
             Compass.material = new Material(Compass.material);
 
-        // Use a fixed number of target brackets, only enabling the ones we need.
-        for (var i = 0; i < 32; i++)
+        // target brackets
         {
-            var targetBracket = Instantiate(TargetBracketPrefab, transform);
-            targetBracket.SetActive(true);
+            TargetManager.Instance.NewTargetEvent += NewTarget;
 
-            TargetBrackets.Add(targetBracket);
+            foreach (var target in TargetManager.Instance.Targets)
+                NewTarget(target);
         }
+    }
+
+    void OnDestroy()
+    {
+        if (TargetManager.HasInstance)
+            TargetManager.Instance.NewTargetEvent -= NewTarget;
+    }
+
+    void NewTarget(Target target)
+    {
+        var targetBracket = Instantiate(TargetBracketPrefab, transform);
+        targetBracket.GetComponent<TargetBracket>().Target = target;
     }
 
     void Update()
@@ -125,8 +132,6 @@ public class HUD : MonoBehaviour
         }
 
         UpdateActiveTargetBracket();
-
-        UpdateTargetBrackets();
 
         UpdateLockOnBracket();
     }
@@ -192,27 +197,6 @@ public class HUD : MonoBehaviour
         }
     }
 
-    void UpdateTargetBrackets()
-    {
-        var targetEnumerator = CombatModel.GetTargetsEnumerator();
-        var targetBracketEnumerator = TargetBrackets.GetEnumerator();
-
-        while (targetEnumerator.MoveNext() && targetBracketEnumerator.MoveNext())
-        {
-            var target = targetEnumerator.Current;
-            var targetBracket = targetBracketEnumerator.Current;
-
-            targetBracket.transform.position = TargetScreenPosition(target);
-            targetBracket.SetActive(true);
-        }
-
-        if (targetEnumerator.Current)
-            Debug.LogWarning("To few target brackets available");
-
-        while (targetBracketEnumerator.MoveNext())
-            targetBracketEnumerator.Current.SetActive(false);
-    }
-
     void UpdateLockOnBracket()
     {
         if (!CombatModel.LockingOn && !CombatModel.LockedOn)
@@ -231,7 +215,7 @@ public class HUD : MonoBehaviour
         LockOnBracket.SetActive(true);
     }
 
-    static Vector3 TargetScreenPosition(Target target)
+    public static Vector3 TargetScreenPosition(Target target)
     {
         return ScreenPosition(target.transform.position);
     }

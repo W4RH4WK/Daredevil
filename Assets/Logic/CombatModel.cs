@@ -6,31 +6,12 @@ using UnityEngine.Assertions;
 [RequireComponent(typeof(Controls))]
 public class CombatModel : MonoBehaviour
 {
-    public float TargetRange = 500.0f;
-
-    public IEnumerator<Target> GetTargetsEnumerator() => Targets.GetEnumerator();
-
-    IList<Target> Targets = new List<Target>();
-
-    void ScanForTargets()
-    {
-        Targets.Clear();
-        foreach (var target in FindObjectsOfType<Target>())
-        {
-            if (target && Vector3.Distance(transform.position, target.transform.position) <= TargetRange)
-                Targets.Add(target);
-        }
-
-        if (!Targets.Contains(ActiveTarget))
-            ActiveTarget = null;
-    }
-
-    //////////////////////////////////////////////////////////////////////////
-
     public Target ActiveTarget { get; private set; }
 
     Queue<Target> RecentActiveTargets = new Queue<Target>();
     float RecentActiveTargetClearTime = 0.0f;
+
+    Target SelfTarget;
 
     public void SelectNextActiveTarget()
     {
@@ -46,10 +27,14 @@ public class CombatModel : MonoBehaviour
 
         ActiveTarget = null;
 
-        var visibleTargets = Targets.Where(IsInsideViewport).OrderBy(DistanceFromViewportCenter).ToList<Target>();
+        var targets = TargetManager.Instance.Targets;
+        var visibleTargets = targets.Where(IsInsideViewport).OrderBy(DistanceFromViewportCenter).ToList<Target>();
 
         foreach (var target in visibleTargets)
         {
+            if (target == SelfTarget)
+                continue;
+
             if (!RecentActiveTargets.Contains(target))
             {
                 ActiveTarget = target;
@@ -188,6 +173,8 @@ public class CombatModel : MonoBehaviour
         Controls = GetComponent<Controls>();
         Assert.IsNotNull(Controls);
 
+        SelfTarget = GetComponent<Target>();
+
         Guns = GetComponentsInChildren<Gun>();
 
         MissileLaunchers = GetComponentsInChildren<MissileLauncher>();
@@ -195,8 +182,6 @@ public class CombatModel : MonoBehaviour
 
     void Update()
     {
-        ScanForTargets();
-
         UpdateLockOn();
 
         if (Controls.NextTarget)
