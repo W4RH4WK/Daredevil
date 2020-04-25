@@ -27,14 +27,14 @@ public class CombatModel : MonoBehaviour
 
         ActiveTarget = null;
 
-        var targets = TargetManager.Instance.Targets;
-        var visibleTargets = targets.Where(IsInsideViewport).OrderBy(DistanceFromViewportCenter).ToList<Target>();
+        var visibleTargets = TargetManager.Instance.Targets
+            .Where(IsInsideViewport)
+            .Where(t => t.Affiliation != SelfTarget.Affiliation)
+            .OrderBy(DistanceFromViewportCenter)
+            .ToList();
 
         foreach (var target in visibleTargets)
         {
-            if (target == SelfTarget)
-                continue;
-
             if (!RecentActiveTargets.Contains(target))
             {
                 ActiveTarget = target;
