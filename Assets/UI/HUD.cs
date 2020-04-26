@@ -1,3 +1,4 @@
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -32,6 +33,10 @@ public class HUD : MonoBehaviour
     public GameObject ActiveTargetBracket;
 
     public GameObject LockOnBracket;
+
+    public GameObject LockOnWarning;
+
+    public GameObject MissileWarning;
 
     Controls Controls;
 
@@ -125,6 +130,8 @@ public class HUD : MonoBehaviour
 
         UpdateMiss();
 
+        UpdateLockOnWarning();
+
         if (VelocityVector)
         {
             VelocityVector.transform.position = (VelocityVectorOffset * FlightModel.Velocity.normalized) + FlightModel.transform.position;
@@ -184,6 +191,17 @@ public class HUD : MonoBehaviour
         Miss.Play();
     }
 
+    void UpdateLockOnWarning()
+    {
+        LockOnWarning.SetActive(false);
+        MissileWarning.SetActive(false);
+
+        if (CombatModel.SelfTarget.Missiles.Count > 0)
+            MissileWarning.SetActive(true);
+        else if (CombatModel.SelfTarget.LockOns.Count > 0)
+            LockOnWarning.SetActive(true);
+    }
+
     void UpdateActiveTargetBracket()
     {
         if (CombatModel.ActiveTarget)
@@ -199,7 +217,7 @@ public class HUD : MonoBehaviour
 
     void UpdateLockOnBracket()
     {
-        if (!CombatModel.LockingOn && !CombatModel.LockedOn)
+        if (!CombatModel.LockOn.LockingOn && !CombatModel.LockOn.LockedOn)
         {
             LockOnBracket.SetActive(false);
             return;
@@ -211,7 +229,7 @@ public class HUD : MonoBehaviour
 
         var targetPosition = TargetScreenPosition(CombatModel.ActiveTarget);
 
-        LockOnBracket.transform.position = Vector3.Lerp(origin, targetPosition, CombatModel.LockOnTimeElapsed / CombatModel.LockOnTime);
+        LockOnBracket.transform.position = Vector3.Lerp(origin, targetPosition, CombatModel.LockOn.LockOnTimeElapsed / CombatModel.LockOn.LockOnTime);
         LockOnBracket.SetActive(true);
     }
 

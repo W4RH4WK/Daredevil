@@ -11,7 +11,7 @@ public class CombatModel : MonoBehaviour
     Queue<Target> RecentActiveTargets = new Queue<Target>();
     float RecentActiveTargetClearTime = 0.0f;
 
-    Target SelfTarget;
+    public Target SelfTarget { get; private set; }
 
     public void SelectNextActiveTarget()
     {
@@ -29,9 +29,8 @@ public class CombatModel : MonoBehaviour
 
         var visibleTargets = TargetManager.Instance.Targets
             .Where(IsInsideViewport)
-            .Where(t => t.Affiliation != SelfTarget.Affiliation)
-            .OrderBy(DistanceFromViewportCenter)
-            .ToList();
+            .Where(t => t.HasDifferentAffiliation(SelfTarget))
+            .OrderBy(DistanceFromViewportCenter);
 
         foreach (var target in visibleTargets)
         {
@@ -58,9 +57,6 @@ public class CombatModel : MonoBehaviour
             while (RecentActiveTargets.Count > 5)
                 RecentActiveTargets.Dequeue();
         }
-
-        if (previousActiveTarget != ActiveTarget)
-            LockOnTimeElapsed = 0.0f;
     }
 
     static bool IsInsideViewport(Target target)
@@ -79,35 +75,6 @@ public class CombatModel : MonoBehaviour
         pos -= new Vector3(0.5f, 0.5f);
 
         return pos.magnitude;
-    }
-
-    //////////////////////////////////////////////////////////////////////////
-
-    public float LockOnAngle = 25.0f;
-
-    public float LockOnTime = 0.5f;
-
-    public float LockOnTimeElapsed { get; private set; } = 0.0f;
-
-    public bool LockingOn => LockOnTimeElapsed > 0.0f && !LockedOn;
-
-    public bool LockedOn => LockOnTimeElapsed >= LockOnTime;
-
-    void UpdateLockOn()
-    {
-        if (!ActiveTarget)
-        {
-            LockOnTimeElapsed = 0.0f;
-            return;
-        }
-
-        var toTarget = ActiveTarget.transform.position - transform.position;
-        var angle = Vector3.Angle(transform.forward, toTarget);
-
-        if (angle <= LockOnAngle)
-            LockOnTimeElapsed += Time.deltaTime;
-        else
-            LockOnTimeElapsed = 0.0f;
     }
 
     //////////////////////////////////////////////////////////////////////////
@@ -139,9 +106,12 @@ public class CombatModel : MonoBehaviour
                 if (missile)
                 {
                     var missileComponent = missile.GetComponent<Missile>();
-                    missileComponent.Target = ActiveTarget;
                     missileComponent.OnHit = RegisterHit;
                     missileComponent.OnMiss = RegisterMiss;
+
+                    if (LockOn.LockedOn)
+                        missileComponent.Target = LockOn.Target;
+
                     break;
                 }
             }
@@ -168,12 +138,18 @@ public class CombatModel : MonoBehaviour
 
     Controls Controls;
 
+    public LockOn LockOn { get; private set; }
+
     void Start()
     {
         Controls = GetComponent<Controls>();
         Assert.IsNotNull(Controls);
 
+        LockOn = GetComponent<LockOn>();
+        Assert.IsNotNull(LockOn);
+
         SelfTarget = GetComponent<Target>();
+        Assert.IsNotNull(SelfTarget);
 
         Guns = GetComponentsInChildren<Gun>();
 
@@ -182,10 +158,10 @@ public class CombatModel : MonoBehaviour
 
     void Update()
     {
-        UpdateLockOn();
-
         if (Controls.NextTarget)
             SelectNextActiveTarget();
+
+        LockOn.Target = ActiveTarget;
 
         UpdateWeapons();
     }

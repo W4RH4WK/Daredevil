@@ -228,6 +228,7 @@ MonoBehaviour:
   Damage: 75
   Speed: 300
   Mobility: 28
+  BreakOffAngle: 60
   Target: {fileID: 0}
 --- !u!114 &-8535224767186005287
 MonoBehaviour:

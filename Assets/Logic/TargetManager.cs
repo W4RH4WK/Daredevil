@@ -4,23 +4,25 @@ using System.Linq;
 
 public class TargetManager : Manager<TargetManager>
 {
-    public IList<Target> Targets { get; private set; } = new List<Target>();
-
     public void AddTarget(Target target)
     {
-        Targets.Add(target);
+        RegisteredTargets.Add(target);
         NewTargetEvent?.Invoke(target);
     }
 
     public void RemoveTarget(Target target)
     {
-        Targets.Remove(target);
+        RegisteredTargets.Remove(target);
     }
+
+    public IEnumerable<Target> Targets => RegisteredTargets;
 
     public event Action<Target> NewTargetEvent;
 
+    IList<Target> RegisteredTargets = new List<Target>();
+
     void Update()
     {
-        Targets = Targets.Where(t => t).ToList();
+        RegisteredTargets = RegisteredTargets.Where(t => t).ToList();
     }
 }
