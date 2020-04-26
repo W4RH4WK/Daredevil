@@ -12,18 +12,7 @@ public class Missile : MonoBehaviour
 
     public float BreakOffAngle = 60.0f;
 
-    public Target Target {
-        get => _Target;
-        set {
-            if (value)
-                value.Missiles.Add(this);
-            else if (_Target)
-                _Target.Missiles.Remove(this);
-
-            _Target = value;
-        }
-    }
-    Target _Target;
+    public Target Target;
 
     public Action OnHit;
 
@@ -39,10 +28,16 @@ public class Missile : MonoBehaviour
 
     void Start()
     {
+        MissileManager.Instance.AddMissile(this);
+
         Rigidbody.velocity = transform.rotation * new Vector3(0.0f, 0.0f, Speed);
     }
 
-    void OnDisable() => Target = null;
+    void OnDestroy()
+    {
+        if (MissileManager.HasInstance)
+            MissileManager.Instance.RemoveMissile(this);
+    }
 
     void Update()
     {

@@ -376,6 +376,8 @@ MonoBehaviour:
   VelocityVectorOffset: 10
   TargetBracketPrefab: {fileID: 8663382601715301211, guid: c2ba5df5f5955e1468893900b8d81432,
     type: 3}
+  MissileBracketPrefab: {fileID: 7695738797522575921, guid: 0e5c6666ca0e36f45aaf80fb198af5ab,
+    type: 3}
   ActiveTargetBracket: {fileID: 3850205088915174796}
   LockOnBracket: {fileID: 9045019529904559824}
   LockOnWarning: {fileID: 4281103554706532173}

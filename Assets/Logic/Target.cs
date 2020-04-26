@@ -19,8 +19,6 @@ public class Target : MonoBehaviour
 
     public ISet<LockOn> LockOns = new HashSet<LockOn>();
 
-    public ISet<Missile> Missiles = new HashSet<Missile>();
-
     //////////////////////////////////////////////////////////////////////////
 
     void OnEnable() => TargetManager.Instance.AddTarget(this);

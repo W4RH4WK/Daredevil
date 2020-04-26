@@ -30,6 +30,8 @@ public class HUD : MonoBehaviour
 
     public GameObject TargetBracketPrefab;
 
+    public GameObject MissileBracketPrefab;
+
     public GameObject ActiveTargetBracket;
 
     public GameObject LockOnBracket;
@@ -68,18 +70,38 @@ public class HUD : MonoBehaviour
             foreach (var target in TargetManager.Instance.Targets)
                 NewTarget(target);
         }
+
+        // missile brackets
+        {
+            MissileManager.Instance.NewMissileEvent += NewMissile;
+
+            foreach (var missile in MissileManager.Instance.Missiles)
+                NewMissile(missile);
+        }
     }
 
     void OnDestroy()
     {
         if (TargetManager.HasInstance)
             TargetManager.Instance.NewTargetEvent -= NewTarget;
+
+        if (MissileManager.HasInstance)
+            MissileManager.Instance.NewMissileEvent -= NewMissile;
     }
 
     void NewTarget(Target target)
     {
         var targetBracket = Instantiate(TargetBracketPrefab, transform);
         targetBracket.GetComponent<TargetBracket>().Target = target;
+    }
+
+    void NewMissile(Missile missile)
+    {
+        if (missile.Target != CombatModel.SelfTarget)
+            return;
+
+        var missileBracket = Instantiate(MissileBracketPrefab, transform);
+        missileBracket.GetComponent<MissileBracket>().Missile = missile;
     }
 
     void Update()
@@ -196,9 +218,12 @@ public class HUD : MonoBehaviour
         LockOnWarning.SetActive(false);
         MissileWarning.SetActive(false);
 
-        if (CombatModel.SelfTarget.Missiles.Count > 0)
+        var missilesWithThisAsTarget = MissileManager.Instance.Missiles
+            .Where(m => m.Target == CombatModel.SelfTarget);
+
+        if (missilesWithThisAsTarget.Count() > 0)
             MissileWarning.SetActive(true);
-        else if (CombatModel.SelfTarget.LockOns.Count > 0)
+        else if (CombatModel.SelfTarget.LockOns.Where(l => l.LockingOn || l.LockedOn).Count() > 0)
             LockOnWarning.SetActive(true);
     }
 
@@ -233,12 +258,13 @@ public class HUD : MonoBehaviour
         LockOnBracket.SetActive(true);
     }
 
+    // TODO: remove?
     public static Vector3 TargetScreenPosition(Target target)
     {
         return ScreenPosition(target.transform.position);
     }
 
-    static Vector3 ScreenPosition(Vector3 position)
+    public static Vector3 ScreenPosition(Vector3 position)
     {
         var viewportPosition = Camera.main.WorldToViewportPoint(position);
 
