@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class Bullet : MonoBehaviour
 {
-    public int Damage = 20;
+    public float Damage = 20.0f;
 
     public float Speed = 150.0f;
 
@@ -20,7 +20,7 @@ public class Bullet : MonoBehaviour
         if (otherHealth)
         {
             otherHealth.ReceiveDamage(Damage);
-            OnHit();
+            OnHit?.Invoke();
         }
     }
 }

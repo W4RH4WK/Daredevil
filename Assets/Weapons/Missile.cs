@@ -4,7 +4,7 @@ using UnityEngine.Assertions;
 
 public class Missile : MonoBehaviour
 {
-    public int Damage = 75;
+    public float Damage = 75.0f;
 
     public float Speed = 300.0f;
 

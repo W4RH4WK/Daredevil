@@ -2,9 +2,9 @@ using UnityEngine;
 
 public class Health : MonoBehaviour
 {
-    public int HealthLeft = 100;
+    public float HealthLeft = 100.0f;
 
-    public void ReceiveDamage(int amount)
+    public void ReceiveDamage(float amount)
     {
         HealthLeft -= amount;
     }

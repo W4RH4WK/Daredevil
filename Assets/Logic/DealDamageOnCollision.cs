@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class DealDamageOnCollision : MonoBehaviour
 {
-    public int Damage = 1000;
+    public float Damage = 1000.0f;
 
     void OnCollisionEnter(Collision collision)
     {
