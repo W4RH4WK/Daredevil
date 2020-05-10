@@ -11,7 +11,11 @@ public class Target : MonoBehaviour
 
     //////////////////////////////////////////////////////////////////////////
 
-    public float AngleTo(Vector3 position) => Vector3.Angle(transform.position, position);
+    public float AngleFrom(Transform other)
+    {
+        var fromOther = transform.position - other.position;
+        return Vector3.Angle(other.forward, fromOther);
+    }
 
     public float DistanceTo(Vector3 position) => Vector3.Distance(transform.position, position);
 

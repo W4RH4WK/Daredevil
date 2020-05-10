@@ -19,7 +19,7 @@ public class AAAI : MonoBehaviour
         return TargetManager.Instance.Targets
             .Where(t => t.HasDifferentAffiliation(SelfTarget))
             .Where(t => t.DistanceTo(transform.position) <= AttackDistance)
-            .OrderBy(t => t.AngleTo(transform.position))
+            .OrderBy(t => t.AngleFrom(transform))
             .FirstOrDefault();
     }
 

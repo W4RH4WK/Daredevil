@@ -14,7 +14,7 @@ public class SamAI : MonoBehaviour
     {
         return TargetManager.Instance.Targets
             .Where(t => t.HasDifferentAffiliation(SelfTarget))
-            .Where(t => t.AngleTo(transform.position) <= LockOn.LockOnAngle)
+            .Where(t => t.AngleFrom(transform) <= LockOn.LockOnAngle)
             .OrderBy(t => t.DistanceTo(transform.position))
             .FirstOrDefault();
     }

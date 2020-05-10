@@ -3,21 +3,21 @@ using UnityEngine.Assertions;
 
 public class BotFlightModel : MonoBehaviour
 {
-    public Waypoint Waypoint;
+    //public Waypoint Waypoint;
 
-    void UpdateWaypoint()
-    {
-        if (!Waypoint)
-            return;
+    //void UpdateWaypoint()
+    //{
+    //    if (!Waypoint)
+    //        return;
 
-        if (Vector3.Distance(transform.position, Waypoint.transform.position) <= Waypoint.ReachedDistance && Waypoint.Next)
-            Waypoint = Waypoint.Next;
+    //    if (Vector3.Distance(transform.position, Waypoint.transform.position) <= Waypoint.ReachedDistance && Waypoint.Next)
+    //        Waypoint = Waypoint.Next;
 
-    }
+    //}
 
     //////////////////////////////////////////////////////////////////////////
 
-    Vector3 Destination;
+    public Vector3 Destination;
 
     Vector3 DestinationPreviousPosition;
 
@@ -25,9 +25,10 @@ public class BotFlightModel : MonoBehaviour
 
     void UpdateDestination()
     {
-        if (Waypoint)
-            Destination = Waypoint.transform.position;
+        //if (Waypoint)
+        //    Destination = Waypoint.transform.position;
 
+        // TODO: Handle transition between no and some destination.
         DestinationSpeed = Vector3.Distance(Destination, DestinationPreviousPosition) / Time.deltaTime;
         DestinationPreviousPosition = Destination;
     }
@@ -136,7 +137,7 @@ public class BotFlightModel : MonoBehaviour
 
     void Update()
     {
-        UpdateWaypoint();
+        //UpdateWaypoint();
 
         UpdateDestination();
 
