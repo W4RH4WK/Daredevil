@@ -80,15 +80,14 @@ public class BotCombatModel : MonoBehaviour
 
     //////////////////////////////////////////////////////////////////////////
 
-    Target FindTarget()
+    public void FindTarget()
     {
         var potentialTargets = TargetManager.Instance.Targets
             .Where(t => t.HasDifferentAffiliation(SelfTarget))
             .Where(t => t.DistanceTo(transform.position) <= 2000.0f);
 
         var randIndex = Random.Range(0, potentialTargets.Count());
-
-        return potentialTargets.ElementAtOrDefault(randIndex);
+        Target = potentialTargets.ElementAtOrDefault(randIndex);
     }
 
     //////////////////////////////////////////////////////////////////////////
@@ -115,7 +114,7 @@ public class BotCombatModel : MonoBehaviour
     void Update()
     {
         if (!Target)
-            Target = FindTarget();
+            FindTarget();
 
         if (!Target)
             return;

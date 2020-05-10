@@ -19,6 +19,8 @@ public class BotFlightModel : MonoBehaviour
 
     public Vector3 Destination;
 
+    public bool AutoLevelRoll;
+
     Vector3 DestinationPreviousPosition;
 
     float DestinationSpeed;
@@ -49,12 +51,16 @@ public class BotFlightModel : MonoBehaviour
         if (Vector3.Angle(transform.forward, toDestination) < 20.0f)
         {
             // direct rotation
-            var targetRotation = Quaternion.LookRotation(toDestination, transform.up);
+
+            var up = AutoLevelRoll ? Vector3.up : transform.up;
+
+            var targetRotation = Quaternion.LookRotation(toDestination, up);
             transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, pitchYawRollRate.x * Time.deltaTime);
         }
         else
         {
             // roll and pitch
+
             var toDestinationUp = Vector3.ProjectOnPlane(toDestination, transform.forward).normalized;
 
             Debug.DrawLine(transform.position, transform.position + 5.0f * toDestinationUp, Color.red);
