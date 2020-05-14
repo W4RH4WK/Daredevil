@@ -7,18 +7,6 @@ using UnityEngine.Assertions;
 
 public class Bot : MonoBehaviour
 {
-    void ChaseTarget()
-    {
-        FlightModel.Destination = -15.0f * CombatModel.Target.transform.forward + CombatModel.Target.transform.position;
-        //Debug.Log("Chasing");
-    }
-
-    void Idle()
-    {
-        FlightModel.Destination = 100.0f * transform.forward + transform.position;
-        //Debug.Log("Idling");
-    }
-
     IEnumerator Straight(float time) { yield return Pitch(Vector3.zero, time); }
 
     IEnumerator PitchUp(float time) { yield return Pitch(Vector3.up, time); }
@@ -68,6 +56,7 @@ public class Bot : MonoBehaviour
     delegate IEnumerator Maneuver(float time);
 
     IEnumerator BarrelRight(float time) { yield return Pitch(Vector3.up + Vector3.right, time); }
+    IEnumerator BarrelLeft(float time) { yield return Pitch(Vector3.up + Vector3.left, time); }
 
     //////////////////////////////////////////////////////////////////////////
 
@@ -86,37 +75,76 @@ public class Bot : MonoBehaviour
 
     //////////////////////////////////////////////////////////////////////////
 
+    public Waypoint Waypoint;
+
+    IEnumerator FollowWaypoint()
+    {
+        while (Waypoint)
+        {
+            if (Vector3.Distance(transform.position, Waypoint.transform.position) < Waypoint.ReachedDistance)
+                Waypoint = Waypoint.Next;
+
+            FlightModel.Destination = Waypoint.transform.position;
+
+            yield return null;
+        }
+    }
+
+    //////////////////////////////////////////////////////////////////////////
+
+    //IEnumerator Behaviour()
+    //{
+    //    while (true)
+    //    {
+    //        if (Waypoint)
+    //            yield return FollowWaypoint();
+    //        else
+    //            yield return Straight(1.0f);
+    //    }
+    //}
+
     IEnumerator Behaviour()
     {
         var combatManeuvers = new[] {
             Tuple.Create<float, Maneuver>(1.0f, PullUp),
-            Tuple.Create<float, Maneuver>(3.0f, BarrelRight),
+            Tuple.Create<float, Maneuver>(1.0f, PitchUp),
+            Tuple.Create<float, Maneuver>(1.0f, PitchLeft),
+            Tuple.Create<float, Maneuver>(1.0f, PitchRight),
+            Tuple.Create<float, Maneuver>(1.0f, BarrelRight),
+            Tuple.Create<float, Maneuver>(1.0f, BarrelLeft),
         };
 
         var targetTimer = 0.0f;
 
         while (true)
         {
-            if (CombatModel.Target)
+            if (Waypoint)
             {
-                targetTimer += Time.deltaTime;
-                if (targetTimer > 10.0f)
-                {
-                    CombatModel.FindTarget();
-                    targetTimer = 0.0f;
-                }
-
-                FlightModel.AutoLevelRoll = false;
-
-                yield return ChaseTarget(RandomRange(5.0f, 15.0f));
-                yield return RandomElement(combatManeuvers)(RandomRange(2.0f, 12.0f));
+                yield return FollowWaypoint();
             }
             else
             {
-                FlightModel.AutoLevelRoll = true;
+                if (CombatModel.Target)
+                {
+                    targetTimer += Time.deltaTime;
+                    if (targetTimer > 10.0f)
+                    {
+                        CombatModel.FindTarget();
+                        targetTimer = 0.0f;
+                    }
 
-                yield return LevelPitch();
-                yield return Straight(1.0f);
+                    FlightModel.AutoLevelRoll = false;
+
+                    yield return ChaseTarget(RandomRange(5.0f, 15.0f));
+                    yield return RandomElement(combatManeuvers)(RandomRange(2.0f, 12.0f));
+                }
+                else
+                {
+                    FlightModel.AutoLevelRoll = true;
+
+                    yield return LevelPitch();
+                    yield return Straight(1.0f);
+                }
             }
         }
     }

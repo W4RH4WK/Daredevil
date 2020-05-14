@@ -3,20 +3,6 @@ using UnityEngine.Assertions;
 
 public class BotFlightModel : MonoBehaviour
 {
-    //public Waypoint Waypoint;
-
-    //void UpdateWaypoint()
-    //{
-    //    if (!Waypoint)
-    //        return;
-
-    //    if (Vector3.Distance(transform.position, Waypoint.transform.position) <= Waypoint.ReachedDistance && Waypoint.Next)
-    //        Waypoint = Waypoint.Next;
-
-    //}
-
-    //////////////////////////////////////////////////////////////////////////
-
     public Vector3 Destination;
 
     public bool AutoLevelRoll;
@@ -27,15 +13,14 @@ public class BotFlightModel : MonoBehaviour
 
     void UpdateDestination()
     {
-        //if (Waypoint)
-        //    Destination = Waypoint.transform.position;
-
-        // TODO: Handle transition between no and some destination.
         DestinationSpeed = Vector3.Distance(Destination, DestinationPreviousPosition) / Time.deltaTime;
         DestinationPreviousPosition = Destination;
     }
 
     //////////////////////////////////////////////////////////////////////////
+
+    float RollVelocity = 0.0f;
+    float PitchVelocity = 0.0f;
 
     void UpdateRotation()
     {
@@ -43,14 +28,17 @@ public class BotFlightModel : MonoBehaviour
 
         // Even bots can do highG turns!
         if (Throttle < -0.5f)
-            pitchYawRollRate *= FlightModelParams.HighGTurnPitchRateModifier;
+            pitchYawRollRate.x *= FlightModelParams.HighGTurnPitchRateModifier;
 
         var toDestination = Destination - transform.position;
         Debug.DrawLine(transform.position, transform.position + toDestination, Color.blue);
 
-        if (Vector3.Angle(transform.forward, toDestination) < 20.0f)
+        if (Vector3.Angle(transform.forward, toDestination) < 15.0f)
         {
             // direct rotation
+
+            RollVelocity = 0.0f;
+            PitchVelocity = 0.0f;
 
             var up = AutoLevelRoll ? Vector3.up : transform.up;
 
@@ -67,15 +55,13 @@ public class BotFlightModel : MonoBehaviour
             Debug.DrawLine(transform.position, transform.position + 5.0f * transform.forward, Color.green);
             Debug.DrawLine(transform.position, transform.position + 5.0f * transform.up, Color.green);
 
-            var roll = Limit(Vector3.SignedAngle(transform.up, toDestinationUp, transform.forward), pitchYawRollRate.z * Time.deltaTime);
+            var roll = Mathf.SmoothDampAngle(0, Vector3.SignedAngle(transform.up, toDestinationUp, transform.forward), ref RollVelocity, 1.0f / FlightModelParams.PitchYawRollResponseRate.z, pitchYawRollRate.z);
             transform.Rotate(Vector3.forward, roll, Space.Self);
 
-            var pitch = Limit(Vector3.SignedAngle(transform.forward, toDestination, transform.right), pitchYawRollRate.x * Time.deltaTime);
+            var pitch = Mathf.SmoothDampAngle(0, Vector3.SignedAngle(transform.forward, toDestination, transform.right), ref PitchVelocity, 1.0f / FlightModelParams.PitchYawRollResponseRate.x, pitchYawRollRate.x);
             transform.Rotate(Vector3.right, pitch, Space.Self);
         }
     }
-
-    static float Limit(float value, float limit) => Mathf.Clamp(value, -limit, limit);
 
     //////////////////////////////////////////////////////////////////////////
 
@@ -98,9 +84,9 @@ public class BotFlightModel : MonoBehaviour
         }
         else
         {
-            if (angleToDestination < 30.0f)
+            if (angleToDestination < 40.0f)
                 Throttle = 0.5f;
-            else if (angleToDestination > 80.0f)
+            else
                 Throttle = -0.7f;
         }
     }
@@ -143,8 +129,6 @@ public class BotFlightModel : MonoBehaviour
 
     void Update()
     {
-        //UpdateWaypoint();
-
         UpdateDestination();
 
         UpdateThrottle();

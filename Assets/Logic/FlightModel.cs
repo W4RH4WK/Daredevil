@@ -24,7 +24,7 @@ public class FlightModel : MonoBehaviour
                 rates.x *= FlightModelParams.HighGTurnPitchRateModifier;
         }
 
-        float mobility;
+        float mobility = 1.0f;
         {
             var mobilitySlope = (FlightModelParams.Mobility - 1) / (FlightModelParams.MaxSpeed - FlightModelParams.BaseThrust);
             mobility = mobilitySlope * Speed + 1 - mobilitySlope * FlightModelParams.BaseThrust;
