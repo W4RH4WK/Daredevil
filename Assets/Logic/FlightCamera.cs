@@ -4,7 +4,11 @@ using UnityEngine.Assertions;
 [RequireComponent(typeof(Camera))]
 public class FlightCamera : MonoBehaviour
 {
-    public Vector3 Offset = new Vector3(0.0f, 0.8f, -4.7f);
+    public Vector3 BaseOffset = new Vector3(0.0f, 0.8f, -4.7f);
+
+    public float LookingAtTargetOffsetDistance = -8.0f;
+
+    public float TargetOffsetSmoothTime = 0.2f;
 
     public float Rate = 5.0f;
 
@@ -28,7 +32,7 @@ public class FlightCamera : MonoBehaviour
 
     void UpdateLook()
     {
-        if (Controls.LookAtTarget && CombatModel.ActiveTarget)
+        if (IsLookingAtTarget)
         {
             LookRotation = Quaternion.identity;
             return;
@@ -43,19 +47,36 @@ public class FlightCamera : MonoBehaviour
     //////////////////////////////////////////////////////////////////////////
 
     float BaseFov;
-    float TargetFov;
     float TargetFovVelocity;
 
     void UpdateFov()
     {
-        TargetFov = BaseFov;
+        var targetFov = BaseFov;
 
         if (Controls.FocusMode)
-            TargetFov *= FocusModeFovModifier;
+            targetFov *= FocusModeFovModifier;
         else if (Controls.StrafeMode)
-            TargetFov *= StrafeModeFovModifier;
+            targetFov *= StrafeModeFovModifier;
 
-        Camera.fieldOfView = Mathf.SmoothDamp(Camera.fieldOfView, TargetFov, ref TargetFovVelocity, TargetFovSmoothTime);
+        Camera.fieldOfView = Mathf.SmoothDamp(Camera.fieldOfView, targetFov, ref TargetFovVelocity, TargetFovSmoothTime);
+    }
+
+    //////////////////////////////////////////////////////////////////////////
+
+    Vector3 Offset;
+    Vector3 TargetOffsetVelocity;
+
+    void UpdateOffset()
+    {
+        var targetOffset = BaseOffset;
+
+        if (IsLookingAtTarget)
+            targetOffset.z = LookingAtTargetOffsetDistance;
+
+        // speed impact
+        targetOffset += SpeedFactor * (2.0f * FlightModel.Speed / FlightModel.FlightModelParams.MaxSpeed - 1.0f) * Vector3.back;
+
+        Offset = Vector3.SmoothDamp(Offset, targetOffset, ref TargetOffsetVelocity, TargetOffsetSmoothTime);
     }
 
     //////////////////////////////////////////////////////////////////////////
@@ -69,6 +90,8 @@ public class FlightCamera : MonoBehaviour
     CombatModel CombatModel;
 
     Quaternion FlightRotation = Quaternion.identity;
+
+    bool IsLookingAtTarget => Controls.LookAtTarget && CombatModel.ActiveTarget;
 
     void OnEnable()
     {
@@ -85,6 +108,7 @@ public class FlightCamera : MonoBehaviour
         Assert.IsNotNull(Camera);
 
         BaseFov = Camera.fieldOfView;
+        Offset = BaseOffset;
 
         if (FlightModel)
             FlightRotation = FlightModel.transform.rotation;
@@ -102,6 +126,8 @@ public class FlightCamera : MonoBehaviour
 
         UpdateFov();
 
+        UpdateOffset();
+
         var rate = Rate;
         if (FlightModel.Stalling)
             rate *= StallingRateModifier;
@@ -109,7 +135,7 @@ public class FlightCamera : MonoBehaviour
             rate *= StrafeModeRateModifier;
 
         var newFlightRotation = FlightModel.transform.rotation;
-        if (Controls.LookAtTarget && CombatModel.ActiveTarget)
+        if (IsLookingAtTarget)
         {
             var forward = CombatModel.ActiveTarget.transform.position - transform.position;
             newFlightRotation = Quaternion.LookRotation(forward, FlightModel.transform.up);
@@ -117,9 +143,7 @@ public class FlightCamera : MonoBehaviour
 
         FlightRotation = Quaternion.Slerp(FlightRotation, newFlightRotation, rate * Time.deltaTime);
 
-        var speedOffset = SpeedFactor * (2.0f * FlightModel.Speed / FlightModel.FlightModelParams.MaxSpeed - 1.0f) * Vector3.back;
-
-        transform.position = FlightRotation * LookRotation * (Offset + speedOffset) + FlightModel.transform.position;
+        transform.position = FlightRotation * LookRotation * Offset + FlightModel.transform.position;
         transform.rotation = FlightRotation * LookRotation;
     }
 }
